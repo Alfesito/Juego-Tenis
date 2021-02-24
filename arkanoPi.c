@@ -108,28 +108,28 @@ PI_THREAD (thread_explora_teclado_PC) {
 
 			switch(teclaPulsada) {
 				case 'a':
-					piLock (SYSTEM_FLAGS_KEY);
+					piLock (KEYBOARD_KEY);
 					flags |= FLAG_MOV_IZQUIERDA;
-					piUnlock (SYSTEM_FLAGS_KEY);
+					piUnlock (KEYBOARD_KEY);
 					break;
 				case 'c':
-					piLock (SYSTEM_FLAGS_KEY);
+					piLock (KEYBOARD_KEY);
 					flags |= FLAG_TIMER_JUEGO;
-					piUnlock (SYSTEM_FLAGS_KEY);
+					piUnlock (KEYBOARD_KEY);
 					break;
 
 				case 'd':
-					piLock (SYSTEM_FLAGS_KEY);
+					piLock (KEYBOARD_KEY);
 					flags |= FLAG_MOV_DERECHA;
-					piUnlock (SYSTEM_FLAGS_KEY);
+					piUnlock (KEYBOARD_KEY);
 					break;
 
 				case 's':
 					//Editar por el alumno..
 
-					piLock (SYSTEM_FLAGS_KEY);
+					piLock (KEYBOARD_KEY);
 					flags |= FLAG_FIN_JUEGO;
-					piUnlock (SYSTEM_FLAGS_KEY)
+					piUnlock (KEYBOARD_KEY);
 					printf("Tecla S pulsada!\n");
 					fflush(stdout);
 					break;

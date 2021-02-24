@@ -379,6 +379,8 @@ void InicializaJuego(fsm_t* this) {
 	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
+
+
 	piLock (STD_IO_BUFFER_KEY);
 	printf("InicializaJuego\n");
 	piUnlock (STD_IO_BUFFER_KEY);
@@ -398,7 +400,24 @@ void InicializaJuego(fsm_t* this) {
 void MuevePalaIzquierda (fsm_t* this) {
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
-	//
+
+	piLock (SYSTEM_FLAGS_KEY);
+	flags &= ~FLAG_BOTON;
+	flags &= ~FLAG_MOV_DERECHA;
+	flags &= ~FLAG_MOV_IZQUIERDA;
+	flags &= ~FLAG_TIMER_JUEGO;
+	flags &= ~FLAG_FIN_JUEGO;
+	piUnlock (SYSTEM_FLAGS_KEY);
+
+	ActualizaPosicionPala(p_arkanoPi, IZQUIERDA);
+
+	piLock(MATRIX_KEY);
+	ActualizaPantalla(p_arkanoPi,1);
+	piUnlock(MATRIX_KEY);
+
+	piLock (STD_IO_BUFFER_KEY);
+	printf("MuevePalaIzquierda\n");
+	piUnlock (STD_IO_BUFFER_KEY);
 }
 
 // void MuevePalaDerecha (void): función similar a la anterior
@@ -407,6 +426,9 @@ void MuevePalaIzquierda (fsm_t* this) {
 void MuevePalaDerecha (fsm_t* this) {
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
+
+	tipo_pala *p_pala;
+	p_pala = (tipo_pala*)(this->user_data);
 
 	//
 
@@ -417,6 +439,12 @@ void MuevePalaDerecha (fsm_t* this) {
 	flags &= ~FLAG_TIMER_JUEGO;
 	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
+
+	ActualizaPosicionPala(p_pala, DERECHA);
+
+	piLock(MATRIX_KEY);
+	ActualizaPantalla(p_arkanoPi,1);
+	piUnlock(MATRIX_KEY);
 
 	piLock (STD_IO_BUFFER_KEY);
 	printf("MuevePalaDerecha\n");
@@ -438,8 +466,9 @@ void ActualizarJuego (fsm_t* this) {
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
 
+	tipo_pelota *p_pelota;
+	p_pelota = (tipo_pelota*)(this->user_data);tipo_pelota *p_pelota;
 	//
-
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_BOTON;
 	flags &= ~FLAG_MOV_DERECHA;
@@ -447,6 +476,17 @@ void ActualizarJuego (fsm_t* this) {
 	flags &= ~FLAG_TIMER_JUEGO;
 	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
+
+	ActualizaPosicionPelota(p_pelota);//param=tipopelota
+	CompruebaReboteLadrillo(p_arkanoPi);
+	CompruebaReboteParedesVerticales(p_arkanoPi);
+	CompruebaReboteTecho(p_arkanoPi);
+	CompruebaRebotePala(p_arkanoPi);
+
+
+	piLock(MATRIX_KEY);
+	ActualizaPantalla(p_arkanoPi,1);
+	piUnlock(MATRIX_KEY);
 
 	piLock (STD_IO_BUFFER_KEY);
 	printf("ActualizarJuego\n");
@@ -469,6 +509,11 @@ void FinalJuego (fsm_t* this) {
 	flags &= ~FLAG_TIMER_JUEGO;
 	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
+
+
+	piLock(MATRIX_KEY);
+	ActualizaPantalla(p_arkanoPi,1);
+	piUnlock(MATRIX_KEY);
 
 	piLock (STD_IO_BUFFER_KEY);
 	printf("FinalJuego\n");
