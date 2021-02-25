@@ -53,8 +53,9 @@ TipoLedDisplay led_display = {
 // como el thread de exploración del teclado del PC
 int ConfiguraInicializaSistema (TipoSistema *p_sistema) {
 	int result = 0;
+	//Faltan cosas
+	sistema.arkanoPi.p_pantalla = &(led_display.pantalla);
 
-	//
 	piLock (SYSTEM_FLAGS_KEY);
 	flags = 0;
 	piUnlock (SYSTEM_FLAGS_KEY);
@@ -108,28 +109,28 @@ PI_THREAD (thread_explora_teclado_PC) {
 
 			switch(teclaPulsada) {
 				case 'a':
-					piLock (KEYBOARD_KEY);
+					piLock (SYSTEM_FLAGS_KEY);
 					flags |= FLAG_MOV_IZQUIERDA;
-					piUnlock (KEYBOARD_KEY);
+					piUnlock (SYSTEM_FLAGS_KEY);
 					break;
 				case 'c':
 					piLock (KEYBOARD_KEY);
 					flags |= FLAG_TIMER_JUEGO;
-					piUnlock (KEYBOARD_KEY);
+					piUnlock (SYSTEM_FLAGS_KEY);
 					break;
 
 				case 'd':
-					piLock (KEYBOARD_KEY);
+					piLock (SYSTEM_FLAGS_KEY);
 					flags |= FLAG_MOV_DERECHA;
-					piUnlock (KEYBOARD_KEY);
+					piUnlock (SYSTEM_FLAGS_KEY);
 					break;
 
 				case 's':
 					//Editar por el alumno..
 
-					piLock (KEYBOARD_KEY);
+					piLock (SYSTEM_FLAGS_KEY);
 					flags |= FLAG_FIN_JUEGO;
-					piUnlock (KEYBOARD_KEY);
+					piUnlock (SYSTEM_FLAGS_KEY);
 					printf("Tecla S pulsada!\n");
 					fflush(stdout);
 					break;

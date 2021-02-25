@@ -29,7 +29,7 @@
 
 // CLAVES PARA MUTEX
 // ATENCION: Valores a modificar por el alumno
-#define	KEYBOARD_KEY		0
+#define	KEYBOARD_KEY		1
 #define	SYSTEM_FLAGS_KEY	1
 #define	MATRIX_KEY			0
 #define	STD_IO_BUFFER_KEY	2
@@ -65,7 +65,7 @@
 #define FLAG_MOV_IZQUIERDA 	0x02
 #define FLAG_TIMER_JUEGO	0x04
 #define FLAG_BOTON 			0x08
-#define FLAG_FIN_JUEGO		0x16
+#define FLAG_FIN_JUEGO		0x10
 
 enum fsm_state {
 	WAIT_START,

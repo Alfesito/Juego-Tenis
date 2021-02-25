@@ -379,12 +379,6 @@ void InicializaJuego(fsm_t* this) {
 
 		piLock(SYSTEM_FLAGS_KEY);
 		flags &= ~FLAG_BOTON;
-		flags &= ~FLAG_MOV_ARRIBA ;
-		flags &= ~FLAG_MOV_ABAJO;
-		flags &= ~FLAG_MOV_DERECHA;
-		flags &= ~FLAG_MOV_IZQUIERDA;
-		flags &= ~FLAG_TIMER_JUEGO;
-		flags &= ~FLAG_FIN_JUEGO;
 		piUnlock(SYSTEM_FLAGS_KEY);
 
 		InicializaLadrillos(p_pantalla);
@@ -414,11 +408,7 @@ void MuevePalaIzquierda (fsm_t* this) {
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
 
 	piLock (SYSTEM_FLAGS_KEY);
-	flags &= ~FLAG_BOTON;
-	flags &= ~FLAG_MOV_DERECHA;
 	flags &= ~FLAG_MOV_IZQUIERDA;
-	flags &= ~FLAG_TIMER_JUEGO;
-	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
 	ActualizaPosicionPala(p_arkanoPi, IZQUIERDA);
@@ -438,18 +428,13 @@ void MuevePalaIzquierda (fsm_t* this) {
 void MuevePalaDerecha (fsm_t* this) {
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
-
 	tipo_pala *p_pala;
 	p_pala = (tipo_pala*)(this->user_data);
 
 	//
 
 	piLock (SYSTEM_FLAGS_KEY);
-	flags &= ~FLAG_BOTON;
 	flags &= ~FLAG_MOV_DERECHA;
-	flags &= ~FLAG_MOV_IZQUIERDA;
-	flags &= ~FLAG_TIMER_JUEGO;
-	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
 	ActualizaPosicionPala(p_pala, DERECHA);
@@ -479,24 +464,51 @@ void ActualizarJuego (fsm_t* this) {
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
 	tipo_pelota *p_pelota;
 	p_pelota = (tipo_pelota*)(this->user_data);
+	/*tipo_trayectoria *trayectoria;
+	trayectoria = (tipo_trayectoria*)(this->user_data);*/
 	tipo_pantalla* p_ladrillos;
 	p_ladrillos = (tipo_pantalla*)(this->user_data);
-	//
+	tipo_pala *p_pala;
+	p_pala = (tipo_pala*)(this->user_data);
+
+	//arkanoPi.pelota...
+
 	piLock (SYSTEM_FLAGS_KEY);
-	flags &= ~FLAG_BOTON;
-	flags &= ~FLAG_MOV_DERECHA;
-	flags &= ~FLAG_MOV_IZQUIERDA;
 	flags &= ~FLAG_TIMER_JUEGO;
-	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
-	ActualizaPosicionPelota(p_pelota);	//param=tipo pelota
-	CompruebaReboteLadrillo(p_arkanoPi);
-	CompruebaReboteParedesVerticales(p_arkanoPi);
-	CompruebaReboteTecho(p_arkanoPi);
+	ActualizaPosicionPelota(p_pelota);
+	if(CompruebaReboteLadrillo(p_arkanoPi)){
+		p_pelota.trayectoria.yv = -p_pelota.trayectoria.yv;
+	}
+	if(CompruebaReboteParedesVerticales(p_arkanoPi)){
+		p_pelota.trayectoria.xv = -p_pelota.trayectoria.xv;
+	}
+	if(CompruebaReboteTecho(p_arkanoPi)){
+		p_pelota.trayectoria.yv = -p_pelota.trayectoria.yv;
+	}
 	CompruebaRebotePala(p_arkanoPi);
-	CalculaLadrillosRestantes(p_ladrillos);
-	if(CompruebaFallo(p_arkanoPi)) printf("GAME OVER");
+	if(CalculaLadrillosRestantes(p_ladrillos) <= 0){
+		piLock(SYSTEM_FLAGS_KEY);
+		flags |= FLAG_FIN_JUEGO;
+		piUnlock(SYSTEM_FLAGS_KEY);
+		return;
+	}
+	if(CompruebaFallo(p_arkanoPi)) {
+		piLock(SYSTEM_FLAGS_KEY);
+		flags |= FLAG_FIN_JUEGO;
+		piUnlock(SYSTEM_FLAGS_KEY);
+		return;
+		printf("GAME OVER");
+	}else{
+		if(p_pelota.x + p_pelota.trayectoria.xv - p_pala.x == 0){
+			CambiarDireccionPelota(p_pelota,ARRIBA_IZQUIERDA);
+		}else if(p_pelota.x + p_pelota.trayectoria.xv - p_pala.x == 1){
+			CambiarDireccionPelota(p_pelota,ARRIBA);
+		}else{
+			CambiarDireccionPelota(p_pelota,ARRIBA_DERECHA);
+		}
+	}
 
 
 	piLock(MATRIX_KEY);
@@ -518,10 +530,6 @@ void FinalJuego (fsm_t* this) {
 	//
 
 	piLock (SYSTEM_FLAGS_KEY);
-	flags &= ~FLAG_BOTON;
-	flags &= ~FLAG_MOV_DERECHA;
-	flags &= ~FLAG_MOV_IZQUIERDA;
-	flags &= ~FLAG_TIMER_JUEGO;
 	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
@@ -551,11 +559,7 @@ void ReseteaJuego (fsm_t* this) {
 
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_BOTON;
-	flags &= ~FLAG_MOV_DERECHA;
-	flags &= ~FLAG_MOV_IZQUIERDA;
-	flags &= ~FLAG_TIMER_JUEGO;
-	flags &= ~FLAG_FIN_JUEGO;
-	piUnlock (SYSTEM_FLAGS_KEY);
+	piUnlock(SYSTEM_FLAGS_KEY);
 
 	ResetArkanoPi(p_arkanoPi);
 
