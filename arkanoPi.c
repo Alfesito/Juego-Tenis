@@ -54,7 +54,7 @@ TipoLedDisplay led_display = {
 int ConfiguraInicializaSistema (TipoSistema *p_sistema) {
 	int result = 0;
 	//Faltan cosas
-	sistema.arkanoPi.p_pantalla = &(led_display.pantalla);
+	//p_sistema->arkanoPi.p_pantalla = &(led_display.pantalla);
 
 	piLock (SYSTEM_FLAGS_KEY);
 	flags = 0;
@@ -125,11 +125,11 @@ PI_THREAD (thread_explora_teclado_PC) {
 					piUnlock (SYSTEM_FLAGS_KEY);
 					break;
 
-				case 's':
+				case 't':
 					//Editar por el alumno..
 
 					piLock (SYSTEM_FLAGS_KEY);
-					flags |= FLAG_FIN_JUEGO;
+					flags |= FLAG_BOTON;
 					piUnlock (SYSTEM_FLAGS_KEY);
 					printf("Tecla S pulsada!\n");
 					fflush(stdout);
@@ -158,6 +158,7 @@ void delay_until (unsigned int next) {
 }
 
 int main () {
+
 	unsigned int next;
 
 	// Maquina de estados: lista de transiciones
@@ -178,8 +179,7 @@ int main () {
 	fsm_t* arkanoPi_fsm = fsm_new (WAIT_START, arkanoPi, &sistema);
 
 	// ..
-	// Configuracion e inicializacion del sistema:
-	ConfiguraInicializaSistema(arkanoPi_fsm);
+	sistema.arkanoPi.p_pantalla = &(led_display.pantalla);
 
 	next = millis();
 	while (1) {

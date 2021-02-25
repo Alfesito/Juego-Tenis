@@ -29,10 +29,10 @@
 
 // CLAVES PARA MUTEX
 // ATENCION: Valores a modificar por el alumno
-#define	KEYBOARD_KEY		1
+#define	KEYBOARD_KEY		0
 #define	SYSTEM_FLAGS_KEY	1
-#define	MATRIX_KEY			0
-#define	STD_IO_BUFFER_KEY	2
+#define	MATRIX_KEY			2
+#define	STD_IO_BUFFER_KEY	3
 
 // Distribucion de pines GPIO empleada para el teclado y el display
 // ATENCION: Valores a modificar por el alumno
