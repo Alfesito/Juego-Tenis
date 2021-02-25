@@ -366,24 +366,36 @@ int CompruebaFinalJuego(fsm_t* this) {
 // la oportuna inicialización de toda variable o estructura de datos
 
 void InicializaJuego(fsm_t* this) {
-	tipo_arkanoPi* p_arkanoPi;
-	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
+	tipo_arkanoPi *p_arkanoPi;
+		p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
+		tipo_pelota *p_pelota;
+		p_pelota = (tipo_pelota*)(this->user_data);
+		tipo_pantalla *p_pantalla;
+		p_pantalla = (tipo_pantalla*)(this->user_data);
+		tipo_pala *p_pala;
+		p_pala = (tipo_pala*)(this->user_data);
+		tipo_pantalla ladrillos;
+		ladrillos = (tipo_pantalla*)(this->user_data);
 
-	//
+		piLock(SYSTEM_FLAGS_KEY);
+		flags &= ~FLAG_BOTON;
+		flags &= ~FLAG_MOV_ARRIBA ;
+		flags &= ~FLAG_MOV_ABAJO;
+		flags &= ~FLAG_MOV_DERECHA;
+		flags &= ~FLAG_MOV_IZQUIERDA;
+		flags &= ~FLAG_TIMER_JUEGO;
+		flags &= ~FLAG_FIN_JUEGO;
+		piUnlock(SYSTEM_FLAGS_KEY);
 
-	piLock (SYSTEM_FLAGS_KEY);
-	flags &= ~FLAG_BOTON;
-	flags &= ~FLAG_MOV_DERECHA;
-	flags &= ~FLAG_MOV_IZQUIERDA;
-	flags &= ~FLAG_TIMER_JUEGO;
-	flags &= ~FLAG_FIN_JUEGO;
-	piUnlock (SYSTEM_FLAGS_KEY);
+		InicializaLadrillos(p_pantalla);
+		InicializaPelota(p_pelota);
+		InicializaPala(p_pala);
+		InicializaPosiblesTrayectorias(p_pelota);
+		InicializaArkanoPi(p_arkanoPi, 1);	//valor del parametro debug?? 1?
 
-
-
-	piLock (STD_IO_BUFFER_KEY);
-	printf("InicializaJuego\n");
-	piUnlock (STD_IO_BUFFER_KEY);
+		piLock (STD_IO_BUFFER_KEY);
+		printf("InicializaJuego\n");
+		piUnlock (STD_IO_BUFFER_KEY);
 
 
 	//pseudoWiringPiEnableDisplay(1);
@@ -465,9 +477,10 @@ void MuevePalaDerecha (fsm_t* this) {
 void ActualizarJuego (fsm_t* this) {
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
-
 	tipo_pelota *p_pelota;
-	p_pelota = (tipo_pelota*)(this->user_data);tipo_pelota *p_pelota;
+	p_pelota = (tipo_pelota*)(this->user_data);
+	tipo_pantalla* p_ladrillos;
+	p_ladrillos = (tipo_pantalla*)(this->user_data);
 	//
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_BOTON;
@@ -477,11 +490,13 @@ void ActualizarJuego (fsm_t* this) {
 	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
-	ActualizaPosicionPelota(p_pelota);//param=tipopelota
+	ActualizaPosicionPelota(p_pelota);	//param=tipo pelota
 	CompruebaReboteLadrillo(p_arkanoPi);
 	CompruebaReboteParedesVerticales(p_arkanoPi);
 	CompruebaReboteTecho(p_arkanoPi);
 	CompruebaRebotePala(p_arkanoPi);
+	CalculaLadrillosRestantes(p_ladrillos);
+	if(CompruebaFallo(p_arkanoPi)) printf("GAME OVER");
 
 
 	piLock(MATRIX_KEY);
@@ -510,10 +525,10 @@ void FinalJuego (fsm_t* this) {
 	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
-
+	/*
 	piLock(MATRIX_KEY);
 	ActualizaPantalla(p_arkanoPi,1);
-	piUnlock(MATRIX_KEY);
+	piUnlock(MATRIX_KEY);*/
 
 	piLock (STD_IO_BUFFER_KEY);
 	printf("FinalJuego\n");
@@ -529,6 +544,8 @@ void FinalJuego (fsm_t* this) {
 void ReseteaJuego (fsm_t* this) {
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
+	tipo_pantalla* p_pantalla;
+	p_pantalla = (tipo_pantalla*)(this->user_data);
 
 	//
 
@@ -539,6 +556,12 @@ void ReseteaJuego (fsm_t* this) {
 	flags &= ~FLAG_TIMER_JUEGO;
 	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
+
+	ResetArkanoPi(p_arkanoPi);
+
+	piLock(MATRIX_KEY);
+	ReseteaMatriz(p_pantalla);
+	piUnlock(MATRIX_KEY);
 
 	piLock (STD_IO_BUFFER_KEY);
 	printf("ReseteaJuego\n");
