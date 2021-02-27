@@ -1,7 +1,7 @@
 
 #include "arkanoPi.h"
 
-volatile int flags = 0;
+int flags = 0;
 
 TipoSistema sistema;
 

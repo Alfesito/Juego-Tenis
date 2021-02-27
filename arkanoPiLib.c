@@ -366,15 +366,7 @@ int CompruebaFinalJuego(fsm_t* this) {
 
 void InicializaJuego(fsm_t* this) {
 	tipo_arkanoPi *p_arkanoPi;
-	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);//
-	/*tipo_pelota *p_pelota;
-	p_pelota = (tipo_pelota*)(this->user_data);
-	tipo_pantalla *p_pantalla;
-	p_pantalla = (tipo_pantalla*)(this->user_data);
-	tipo_pala *p_pala;
-	p_pala = (tipo_pala*)(this->user_data);
-	tipo_pantalla ladrillos;
-	ladrillos = (tipo_pantalla*)(this->user_data);*/
+	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
 
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_BOTON;
@@ -382,7 +374,7 @@ void InicializaJuego(fsm_t* this) {
 
 	InicializaLadrillos(p_arkanoPi->p_pantalla);//parametro: pantalla
 	InicializaPelota(p_arkanoPi->pelota);
-	InicializaPala(p_arkanoPi->p_pantalla);
+	InicializaPala(p_arkanoPi->pala);
 	InicializaPosiblesTrayectorias(p_arkanoPi->pelota);
 	InicializaArkanoPi(p_arkanoPi, 1);	//valor del parametro debug?? 1?
 
@@ -410,7 +402,7 @@ void MuevePalaIzquierda (fsm_t* this) {
 	flags &= ~FLAG_MOV_IZQUIERDA;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
-	ActualizaPosicionPala(p_arkanoPi, IZQUIERDA);
+	ActualizaPosicionPala(p_arkanoPi->pala, IZQUIERDA);
 
 	piLock(MATRIX_KEY);
 	ActualizaPantalla(p_arkanoPi,1);
@@ -435,7 +427,7 @@ void MuevePalaDerecha (fsm_t* this) {
 	flags &= ~FLAG_MOV_DERECHA;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
-	ActualizaPosicionPala(p_arkanoPi->pelota, DERECHA);
+	ActualizaPosicionPala(p_arkanoPi->pala, DERECHA);
 
 	piLock(MATRIX_KEY);
 	ActualizaPantalla(p_arkanoPi,1);
