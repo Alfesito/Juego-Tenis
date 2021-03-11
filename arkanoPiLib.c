@@ -82,7 +82,7 @@ void InicializaPosiblesTrayectorias(tipo_pelota *p_pelota) {
 	p_pelota->posibles_trayectorias[ARRIBA_IZQUIERDA].yv = -1;
 	p_pelota->num_posibles_trayectorias++;
 	p_pelota->posibles_trayectorias[ARRIBA].xv = 0;
-	p_pelota->posibles_trayectorias[ARRIBA].yv = 1;
+	p_pelota->posibles_trayectorias[ARRIBA].yv = -1;
 	p_pelota->num_posibles_trayectorias++;
 	p_pelota->posibles_trayectorias[ARRIBA_DERECHA].xv = 1;
 	p_pelota->posibles_trayectorias[ARRIBA_DERECHA].yv = -1;
@@ -374,13 +374,13 @@ void InicializaJuego(fsm_t* this) {
 
 	InicializaArkanoPi(p_arkanoPi, 1);	//valor del parametro debug?? 1?
 
-	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
 
 	piLock (STD_IO_BUFFER_KEY);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
 	printf("InicializaJuego\n");
 	piUnlock (STD_IO_BUFFER_KEY);
 
+	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
 
 	//pseudoWiringPiEnableDisplay(1);
 }
@@ -451,7 +451,7 @@ void ActualizarJuego (fsm_t* this) {
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
 
-	//colocar los tmrs!!!
+
 
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_TIMER_JUEGO;
@@ -504,6 +504,8 @@ void ActualizarJuego (fsm_t* this) {
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
 	printf("ActualizarJuego\n");
 	piUnlock (STD_IO_BUFFER_KEY);
+
+	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
 }
 
 // void FinalJuego (void): función encargada de mostrar en la ventana de

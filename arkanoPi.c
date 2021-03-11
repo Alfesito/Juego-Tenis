@@ -181,6 +181,9 @@ int main () {
 
 	fsm_t* arkanoPi_fsm = fsm_new (WAIT_START, arkanoPi, &sistema.arkanoPi);
 
+	fsm_t* teclado_fsm = fsm_new (TECLADO_ESPERA_COLUMNA, arkanoPi, &(teclado));
+	fsm_t* tecla_fsm = fsm_new (TECLADO_ESPERA_TECLA, arkanoPi, &(teclado));
+
 	next = millis();
 	while (1) {
 		fsm_fire (arkanoPi_fsm);
@@ -193,4 +196,6 @@ int main () {
 	}
 	tmr_destroy ((tmr_t*)(sistema.arkanoPi.tmr_actualizacion_juego));
 	fsm_destroy (arkanoPi_fsm);
+	fsm_destroy (teclado_fsm);
+	fsm_destroy (tecla_fsm);
 }
