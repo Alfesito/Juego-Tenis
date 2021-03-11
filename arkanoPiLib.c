@@ -451,8 +451,6 @@ void ActualizarJuego (fsm_t* this) {
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
 
-
-
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_TIMER_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);

@@ -75,7 +75,7 @@ int ConfiguraInicializaSistema (TipoSistema *p_sistema) {
 	}
 
 	// Lanzamos thread para exploracion del teclado convencional del PC
-	result = piThreadCreate (thread_explora_teclado_PC);
+	//result = piThreadCreate (thread_explora_teclado_PC);
 
 	if (result != 0) {
 		printf ("Thread didn't start!!!\n");
@@ -92,7 +92,7 @@ int ConfiguraInicializaSistema (TipoSistema *p_sistema) {
 //------------------------------------------------------
 // FUNCIONES LIGADAS A THREADS ADICIONALES
 //------------------------------------------------------
-
+/*
 PI_THREAD (thread_explora_teclado_PC) {
 	int teclaPulsada;
 
@@ -110,12 +110,12 @@ PI_THREAD (thread_explora_teclado_PC) {
 					flags |= FLAG_MOV_IZQUIERDA;
 					piUnlock (SYSTEM_FLAGS_KEY);
 					break;
-					/*
+
 				case 'c':
 					piLock (SYSTEM_FLAGS_KEY);
 					flags |= FLAG_TIMER_JUEGO;
 					piUnlock (SYSTEM_FLAGS_KEY);
-					break;*/
+					break;
 
 				case 'd':
 					piLock (SYSTEM_FLAGS_KEY);
@@ -145,7 +145,7 @@ PI_THREAD (thread_explora_teclado_PC) {
 
 		piUnlock (STD_IO_BUFFER_KEY);
 	}
-}
+}*/
 
 // wait until next_activation (absolute time)
 void delay_until (unsigned int next) {
@@ -187,9 +187,8 @@ int main () {
 	next = millis();
 	while (1) {
 		fsm_fire (arkanoPi_fsm);
-
-		// A completar por el alumno...
-		// ...
+		fsm_fire (teclado_fsm);
+		fsm_fire (tecla_fsm);
 
 		next += CLK_MS;
 		delay_until (next);
