@@ -21,7 +21,7 @@
 // ATENCION: Valores a modificar por el alumno
 // INTERVALO DE GUARDA ANTI-REBOTES
 #define	DEBOUNCE_TIME			0
-#define TIMEOUT_ACTUALIZA_JUEGO 0
+#define TIMEOUT_ACTUALIZA_JUEGO 3000
 
 // A 'key' which we can lock and unlock - values are 0 through 3
 //	This is interpreted internally as a pthread_mutex by wiringPi
@@ -29,10 +29,10 @@
 
 // CLAVES PARA MUTEX
 // ATENCION: Valores a modificar por el alumno
-#define	KEYBOARD_KEY		0
+#define	KEYBOARD_KEY		0		//Cuando utilizo taclado matricial de la raspberry
 #define	SYSTEM_FLAGS_KEY	1
-#define	MATRIX_KEY			2
-#define	STD_IO_BUFFER_KEY	3
+#define	MATRIX_KEY			2		//Matriz de ladrillos
+#define	STD_IO_BUFFER_KEY	3		//Para el uso mas concreto de la matriz
 
 // Distribucion de pines GPIO empleada para el teclado y el display
 // ATENCION: Valores a modificar por el alumno

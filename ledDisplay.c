@@ -70,8 +70,8 @@ void PintaPantallaPorTerminal (tipo_pantalla *p_pantalla) {
 
 	printf("\n[PANTALLA]\n");
 	fflush(stdout);
-	for(j=0;j<NUM_FILAS_DISPLAY;j++) {
-		for(i=0;i<NUM_COLUMNAS_DISPLAY;i++) {
+	for(i=0;i<NUM_FILAS_DISPLAY;i++) {
+		for(j=0;j<NUM_COLUMNAS_DISPLAY;j++) {
 			printf("%d", p_pantalla->matriz[i][j]);
 			fflush(stdout);
 		}

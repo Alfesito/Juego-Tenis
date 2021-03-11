@@ -3,7 +3,7 @@
 
 #include "systemLib.h"
 #include "kbhit.h" // para poder detectar teclas pulsadas sin bloqueo y leer las teclas pulsadas
-#include "fsm.h"	//para poder crear y ejecutar la maquina de estados
+#include "fsm.h"
 #include "tmr.h"
 #include "teclado_TL04.h"
 #include "arkanoPiLib.h"

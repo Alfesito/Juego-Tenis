@@ -1,4 +1,3 @@
-
 #include "arkanoPi.h"
 
 int flags = 0;
@@ -60,8 +59,6 @@ int ConfiguraInicializaSistema (TipoSistema *p_sistema) {
 	flags = 0;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
-	InicializaJuego(p_sistema);
-
 	piLock (STD_IO_BUFFER_KEY);
 	printf("\nIniciando el juego...\n");
 	piUnlock (STD_IO_BUFFER_KEY);
@@ -113,11 +110,12 @@ PI_THREAD (thread_explora_teclado_PC) {
 					flags |= FLAG_MOV_IZQUIERDA;
 					piUnlock (SYSTEM_FLAGS_KEY);
 					break;
+					/*
 				case 'c':
-					piLock (KEYBOARD_KEY);
+					piLock (SYSTEM_FLAGS_KEY);
 					flags |= FLAG_TIMER_JUEGO;
 					piUnlock (SYSTEM_FLAGS_KEY);
-					break;
+					break;*/
 
 				case 'd':
 					piLock (SYSTEM_FLAGS_KEY);
@@ -131,7 +129,7 @@ PI_THREAD (thread_explora_teclado_PC) {
 					piLock (SYSTEM_FLAGS_KEY);
 					flags |= FLAG_BOTON;
 					piUnlock (SYSTEM_FLAGS_KEY);
-					printf("Tecla S pulsada!\n");
+					printf("Tecla T pulsada!\n");
 					fflush(stdout);
 					break;
 
@@ -175,11 +173,13 @@ int main () {
 
 	// Configuracion e incializacion del sistema
 	ConfiguraInicializaSistema (&sistema);
-
-	fsm_t* arkanoPi_fsm = fsm_new (WAIT_START, arkanoPi, &sistema);
-
 	// ..
 	sistema.arkanoPi.p_pantalla = &(led_display.pantalla);
+
+	sistema.arkanoPi.tmr_actualizacion_juego = tmr_new (tmr_actualizacion_juego_isr);
+
+
+	fsm_t* arkanoPi_fsm = fsm_new (WAIT_START, arkanoPi, &sistema.arkanoPi);
 
 	next = millis();
 	while (1) {
@@ -191,6 +191,6 @@ int main () {
 		next += CLK_MS;
 		delay_until (next);
 	}
-
+	tmr_destroy ((tmr_t*)(sistema.arkanoPi.tmr_actualizacion_juego));
 	fsm_destroy (arkanoPi_fsm);
 }
