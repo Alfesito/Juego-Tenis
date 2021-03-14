@@ -466,6 +466,9 @@ void ActualizarJuego (fsm_t* this) {
 		piLock(SYSTEM_FLAGS_KEY);
 		flags |= FLAG_FIN_JUEGO;
 		piUnlock(SYSTEM_FLAGS_KEY);
+		piLock(STD_IO_BUFFER_KEY);
+			printf("GAME OVER\n");
+		piUnlock(STD_IO_BUFFER_KEY);
 		return;
 	}else if(CompruebaRebotePala(*p_arkanoPi)){
 		switch(p_arkanoPi->pelota.x + p_arkanoPi->pelota.trayectoria.xv - p_arkanoPi->pala.x){
@@ -519,10 +522,6 @@ void FinalJuego (fsm_t* this) {
 	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
-	/*
-	piLock(MATRIX_KEY);
-	ActualizaPantalla(p_arkanoPi,1);
-	piUnlock(MATRIX_KEY);*/
 
 	piLock (STD_IO_BUFFER_KEY);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);

@@ -20,7 +20,7 @@
 
 // ATENCION: Valores a modificar por el alumno
 // INTERVALO DE GUARDA ANTI-REBOTES
-#define	DEBOUNCE_TIME			0
+#define	DEBOUNCE_TIME			100
 #define TIMEOUT_ACTUALIZA_JUEGO 2000
 
 // A 'key' which we can lock and unlock - values are 0 through 3
@@ -37,13 +37,13 @@
 // Distribucion de pines GPIO empleada para el teclado y el display
 // ATENCION: Valores a modificar por el alumno
 #define GPIO_KEYBOARD_COL_1 	0
-#define GPIO_KEYBOARD_COL_2 	0
-#define GPIO_KEYBOARD_COL_3 	0
-#define GPIO_KEYBOARD_COL_4 	0
-#define GPIO_KEYBOARD_ROW_1 	0
-#define GPIO_KEYBOARD_ROW_2 	0
-#define GPIO_KEYBOARD_ROW_3 	0
-#define GPIO_KEYBOARD_ROW_4 	0
+#define GPIO_KEYBOARD_COL_2 	1
+#define GPIO_KEYBOARD_COL_3 	2
+#define GPIO_KEYBOARD_COL_4 	3
+#define GPIO_KEYBOARD_ROW_1 	5
+#define GPIO_KEYBOARD_ROW_2 	6
+#define GPIO_KEYBOARD_ROW_3 	12
+#define GPIO_KEYBOARD_ROW_4 	13
 
 #define GPIO_LED_DISPLAY_COL_1	0
 #define GPIO_LED_DISPLAY_COL_2	0
@@ -52,7 +52,7 @@
 #define GPIO_LED_DISPLAY_ROW_1	0
 #define GPIO_LED_DISPLAY_ROW_2	0
 #define GPIO_LED_DISPLAY_ROW_3	0
-#define GPIO_LED_DISPLAY_ROW_4	0
+#define GPIO_LED_DISPLAY_ROW_4  0
 #define GPIO_LED_DISPLAY_ROW_5	0
 #define GPIO_LED_DISPLAY_ROW_6	0
 #define GPIO_LED_DISPLAY_ROW_7	0
