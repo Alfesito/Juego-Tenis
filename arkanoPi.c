@@ -32,12 +32,25 @@ TipoTeclado teclado = { .columnas = {
 	};
 
 // Declaracion del objeto display
-TipoLedDisplay led_display = { .pines_control_columnas = {
+TipoLedDisplay led_display = {
+	.pines_control_columnas = {
 // A completar por el alumno...
 // ...
-		}, .filas = {
+			GPIO_LED_DISPLAY_COL_1,
+			GPIO_LED_DISPLAY_COL_2,
+			GPIO_LED_DISPLAY_COL_3,
+			GPIO_LED_DISPLAY_COL_4
+		},
+	.filas = {
 // A completar por el alumno...
 // ...
+			GPIO_LED_DISPLAY_ROW_1,
+			GPIO_LED_DISPLAY_ROW_2,
+			GPIO_LED_DISPLAY_ROW_3,
+			GPIO_LED_DISPLAY_ROW_4,
+			GPIO_LED_DISPLAY_ROW_5,
+			GPIO_LED_DISPLAY_ROW_6,
+			GPIO_LED_DISPLAY_ROW_7
 		},
 // A completar por el alumno...
 // ...
@@ -67,9 +80,15 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema) {
 
 	wiringPiSetupGpio();
 	InicializaTeclado(&teclado);
+	InicializaLedDisplay(&led_display);
 
 	piLock(STD_IO_BUFFER_KEY);
 	printf("\nIniciando el juego...\n");
+	printf("\nBOTONES DE ARKANOPI"
+			"\nBotón para encender y resetear -> 1"
+			"\nBotón de movimiento a la izquierda -> 4"
+			"\nBotón de movimiento a la derecha -> 6"
+			"\nBotón para apagar el juego -> F\n");
 	piUnlock(STD_IO_BUFFER_KEY);
 
 	//
