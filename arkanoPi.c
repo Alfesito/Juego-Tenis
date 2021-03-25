@@ -235,4 +235,6 @@ int main() {
 	fsm_destroy(tecla_fsm);
 	fsm_destroy(led_display.tmr_refresco_display);
 	fsm_destroy(display_fsm);
+
+	return 0;
 }

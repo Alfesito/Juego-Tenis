@@ -367,22 +367,20 @@ int CompruebaFinalJuego(fsm_t* this) {
 void InicializaJuego(fsm_t* this) {
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
-	int i= 1;
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_BOTON;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
-	InicializaArkanoPi(p_arkanoPi, i);	//valor del parametro debug?? 1?
-	pseudoWiringPiEnableDisplay(i);
+	InicializaArkanoPi(p_arkanoPi, 0);	//valor del parametro debug?? 1?
 
-	piLock (STD_IO_BUFFER_KEY);
+
+	piLock (MATRIX_KEY);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
-	printf("InicializaJuego\n");
-	piUnlock (STD_IO_BUFFER_KEY);
+	//printf("InicializaJuego\n");
+	piUnlock (MATRIX_KEY);
 
 	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
-
-	//pseudoWiringPiEnableDisplay(1);
+	pseudoWiringPiEnableDisplay(1);
 }
 
 // void MuevePalaIzquierda (void): funcion encargada de ejecutar
@@ -404,12 +402,12 @@ void MuevePalaIzquierda (fsm_t* this) {
 	ActualizaPosicionPala(&(p_arkanoPi->pala), IZQUIERDA);		//para pasar la direcciopn y que me diga el puntero
 
 	piLock(MATRIX_KEY);
-	ActualizaPantalla(p_arkanoPi,1);		//p_ denota puntero
+	ActualizaPantalla(p_arkanoPi,0);		//p_ denota puntero
 	piUnlock(MATRIX_KEY);
 
 	piLock (STD_IO_BUFFER_KEY);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
-	printf("MuevePalaIzquierda\n");
+	//printf("MuevePalaIzquierda\n");
 	piUnlock (STD_IO_BUFFER_KEY);
 }
 
@@ -427,12 +425,12 @@ void MuevePalaDerecha (fsm_t* this) {
 	ActualizaPosicionPala(&(p_arkanoPi->pala), DERECHA);
 
 	piLock(MATRIX_KEY);
-	ActualizaPantalla(p_arkanoPi,1);
+	ActualizaPantalla(p_arkanoPi,0);
 	piUnlock(MATRIX_KEY);
 
 	piLock (STD_IO_BUFFER_KEY);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
-	printf("MuevePalaDerecha\n");
+	//printf("MuevePalaDerecha\n");
 	piUnlock (STD_IO_BUFFER_KEY);
 }
 
@@ -466,9 +464,9 @@ void ActualizarJuego (fsm_t* this) {
 		piLock(SYSTEM_FLAGS_KEY);
 		flags |= FLAG_FIN_JUEGO;
 		piUnlock(SYSTEM_FLAGS_KEY);
-		piLock(STD_IO_BUFFER_KEY);
-			printf("GAME OVER\n");
-		piUnlock(STD_IO_BUFFER_KEY);
+		/*piLock(STD_IO_BUFFER_KEY);
+		printf("GAME OVER\n");
+		piUnlock(STD_IO_BUFFER_KEY);*/
 		return;
 	}else if(CompruebaRebotePala(*p_arkanoPi)){
 		switch(p_arkanoPi->pelota.x + p_arkanoPi->pelota.trayectoria.xv - p_arkanoPi->pala.x){
@@ -498,12 +496,12 @@ void ActualizarJuego (fsm_t* this) {
 	ActualizaPosicionPelota(&(p_arkanoPi->pelota));
 
 	piLock(MATRIX_KEY);
-	ActualizaPantalla(p_arkanoPi,1);
+	ActualizaPantalla(p_arkanoPi,0);
 	piUnlock(MATRIX_KEY);
 
 	piLock (STD_IO_BUFFER_KEY);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
-	printf("ActualizarJuego\n");
+	//printf("ActualizarJuego\n");
 	piUnlock (STD_IO_BUFFER_KEY);
 
 	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
@@ -515,9 +513,6 @@ void ActualizarJuego (fsm_t* this) {
 void FinalJuego (fsm_t* this) {
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
-	int i = 1;
-
-	pseudoWiringPiEnableDisplay(i);
 
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_FIN_JUEGO;
@@ -526,10 +521,10 @@ void FinalJuego (fsm_t* this) {
 
 	piLock (STD_IO_BUFFER_KEY);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
-	printf("FinalJuego\n");
+	//printf("FinalJuego\n");
 	piUnlock (STD_IO_BUFFER_KEY);
 
-	//pseudoWiringPiEnableDisplay(0);
+	pseudoWiringPiEnableDisplay(0);
 }
 
 //void ReseteaJuego (void): función encargada de llevar a cabo la
@@ -552,7 +547,7 @@ void ReseteaJuego (fsm_t* this) {
 
 	piLock (STD_IO_BUFFER_KEY);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
-	printf("ReseteaJuego\n");
+	//printf("ReseteaJuego\n");
 	piUnlock (STD_IO_BUFFER_KEY);
 }
 

@@ -40,8 +40,8 @@ void InicializaLedDisplay(TipoLedDisplay *led_display) {
 	// A completar por el alumno...
 	// ...
 	for (int i = 0; i < NUM_COLUMNAS_DISPLAY; i++) {
-		pinMode(led_display->p_columna, OUTPUT); //p_columna??
-		digitalWrite(led_display->p_columna, HIGH);
+		pinMode(led_display->pines_control_columnas[i], OUTPUT);
+		digitalWrite(led_display->pines_control_columnas[i], HIGH);
 	}
 	for (int i = 0; i < NUM_FILAS_DISPLAY; i++) {
 		pinMode(led_display->filas[i], OUTPUT);
@@ -130,8 +130,8 @@ void ActualizaLedDisplay(TipoLedDisplay *led_display) {
 }
 
 void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla) {
+#ifdef __SIN_PSEUDOWIRINGPI__
 	int i = 0, j = 0;
-
 	printf("\n[PANTALLA]\n");
 	fflush(stdout);
 	for (i = 0; i < NUM_FILAS_DISPLAY; i++) {
@@ -143,6 +143,7 @@ void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla) {
 		fflush(stdout);
 	}
 	fflush(stdout);
+#endif
 }
 
 //------------------------------------------------------

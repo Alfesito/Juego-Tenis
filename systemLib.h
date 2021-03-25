@@ -9,7 +9,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/time.h>
-//s#include <wiringPi.h>
+//#include <wiringPi.h>
 #include "pseudoWiringPi.h"
 
 #include "kbhit.h" // para poder detectar teclas pulsadas sin bloqueo y leer las teclas pulsadas
