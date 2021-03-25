@@ -1,14 +1,30 @@
 #include "ledDisplay.h"
 
-tipo_pantalla pantalla_inicial = { .matriz = { { 0, 0, 0, 0, 0, 0, 0 }, { 0, 1,
-		1, 0, 1, 0, 0 }, { 0, 1, 1, 0, 0, 1, 0 }, { 0, 0, 0, 0, 0, 1, 0 }, { 0,
-		0, 0, 0, 0, 1, 0 }, { 0, 1, 1, 0, 0, 1, 0 }, { 0, 1, 1, 0, 1, 0, 0 }, {
-		0, 0, 0, 0, 0, 0, 0 }, } };
+tipo_pantalla pantalla_inicial = {
+	.matriz = {
+	{0,0,0,0,0,0,0},
+	{0,1,1,0,1,0,0},
+	{0,1,1,0,0,1,0},
+	{0,0,0,0,0,1,0},
+	{0,0,0,0,0,1,0},
+	{0,1,1,0,0,1,0},
+	{0,1,1,0,1,0,0},
+	{0,0,0,0,0,0,0},
+	}
+};
 
-tipo_pantalla pantalla_final = { .matriz = { { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 1,
-		0, 0, 1, 0 }, { 0, 1, 1, 0, 1, 0, 0 }, { 0, 0, 0, 0, 1, 0, 0 }, { 0, 0,
-		0, 0, 1, 0, 0 }, { 0, 1, 1, 0, 1, 0, 0 }, { 0, 0, 1, 0, 0, 1, 0 }, { 0,
-		0, 0, 0, 0, 0, 0 }, } };
+tipo_pantalla pantalla_final = {
+	.matriz = {
+	{0,0,0,0,0,0,0},
+	{0,0,1,0,0,1,0},
+	{0,1,1,0,1,0,0},
+	{0,0,0,0,1,0,0},
+	{0,0,0,0,1,0,0},
+	{0,1,1,0,1,0,0},
+	{0,0,1,0,0,1,0},
+	{0,0,0,0,0,0,0},
+	}
+};
 
 // Maquina de estados: lista de transiciones
 // {EstadoOrigen, CondicionDeDisparo, EstadoFinal, AccionesSiTransicion }
@@ -33,7 +49,7 @@ void InicializaLedDisplay(TipoLedDisplay *led_display) {
 	}
 	led_display->tmr_refresco_display = tmr_new(timer_refresco_display_isr);
 	tmr_startms((tmr_t*) (led_display->tmr_refresco_display),
-			TIMEOUT_COLUMNA_DISPLAY);
+	TIMEOUT_COLUMNA_DISPLAY);
 }
 
 //------------------------------------------------------
@@ -48,7 +64,7 @@ void ApagaFilas(TipoLedDisplay *led_display) {
 	}
 }
 
-void ExcitaColumnas(int columna) {//cambiar los LOW y HIGH
+void ExcitaColumnas(int columna) {	//cambiar los LOW y HIGH
 
 	switch (columna) {
 	// A completar por el alumno...
@@ -69,14 +85,14 @@ void ExcitaColumnas(int columna) {//cambiar los LOW y HIGH
 		digitalWrite(led_display.pines_control_columnas[2], LOW);
 		break;
 	case 3:
-		digitalWrite(led_display.pines_control_columnas[0], LOW);
-		digitalWrite(led_display.pines_control_columnas[1], LOW);
-		digitalWrite(led_display.pines_control_columnas[2], HIGH);
-		break;
-	case 4:
 		digitalWrite(led_display.pines_control_columnas[0], HIGH);
 		digitalWrite(led_display.pines_control_columnas[1], HIGH);
 		digitalWrite(led_display.pines_control_columnas[2], LOW);
+		break;
+	case 4:
+		digitalWrite(led_display.pines_control_columnas[0], LOW);
+		digitalWrite(led_display.pines_control_columnas[1], LOW);
+		digitalWrite(led_display.pines_control_columnas[2], HIGH);
 		break;
 	case 5:
 		digitalWrite(led_display.pines_control_columnas[0], HIGH);
@@ -99,6 +115,18 @@ void ExcitaColumnas(int columna) {//cambiar los LOW y HIGH
 void ActualizaLedDisplay(TipoLedDisplay *led_display) {
 	// A completar por el alumno...
 	// ...
+	ApagaFilas(led_display);
+	if(led_display -> p_columna < NUM_COLUMNAS_DISPLAY - 1){
+		led_display -> p_columna++;
+	}else{
+		led_display -> p_columna=0;
+	}
+	ExcitaColumnas(led_display->p_columna);
+	for(int i=0; i<NUM_FILAS_DISPLAY; i++){
+		if(led_display->pantalla.matriz[led_display->p_columna][i] == 1){
+			digitalWrite(led_display->filas[i],LOW);
+		}
+	}
 }
 
 void PintaPantallaPorTerminal(tipo_pantalla *p_pantalla) {
@@ -146,6 +174,13 @@ void ActualizaExcitacionDisplay(fsm_t *this) {
 
 	// A completar por el alumno...
 	// ...
+	tmr_startms((tmr_t*) (led_display.tmr_refresco_display),
+			TIMEOUT_COLUMNA_DISPLAY);
+	piLock(MATRIX_KEY);
+	led_display.flags &= (~FLAG_TIMEOUT_COLUMNA_DISPLAY);
+	piUnlock(MATRIX_KEY);
+
+	ActualizaLedDisplay(p_ledDisplay);
 }
 
 //------------------------------------------------------
@@ -155,4 +190,7 @@ void ActualizaExcitacionDisplay(fsm_t *this) {
 void timer_refresco_display_isr(union sigval value) {
 	// A completar por el alumno...
 	// ...
+	piLock(MATRIX_KEY);
+	led_display.flags |= FLAG_TIMEOUT_COLUMNA_DISPLAY;
+	piUnlock(MATRIX_KEY);
 }

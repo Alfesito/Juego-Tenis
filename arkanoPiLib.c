@@ -367,13 +367,13 @@ int CompruebaFinalJuego(fsm_t* this) {
 void InicializaJuego(fsm_t* this) {
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
-
+	int i= 1;
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_BOTON;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
-	InicializaArkanoPi(p_arkanoPi, 1);	//valor del parametro debug?? 1?
-
+	InicializaArkanoPi(p_arkanoPi, i);	//valor del parametro debug?? 1?
+	pseudoWiringPiEnableDisplay(i);
 
 	piLock (STD_IO_BUFFER_KEY);
 	PintaPantallaPorTerminal(p_arkanoPi->p_pantalla);
@@ -515,8 +515,9 @@ void ActualizarJuego (fsm_t* this) {
 void FinalJuego (fsm_t* this) {
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
+	int i = 1;
 
-	//
+	pseudoWiringPiEnableDisplay(i);
 
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_FIN_JUEGO;
@@ -538,10 +539,6 @@ void FinalJuego (fsm_t* this) {
 void ReseteaJuego (fsm_t* this) {
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
-	/*tipo_pantalla* p_pantalla;
-	p_pantalla = (tipo_pantalla*)(this->user_data);*/
-
-	//
 
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_BOTON;

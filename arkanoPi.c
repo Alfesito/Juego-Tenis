@@ -54,7 +54,10 @@ TipoLedDisplay led_display = {
 		},
 // A completar por el alumno...
 // ...
-		};
+	/*	.rutinas_ISR = {
+
+		},*/
+	};
 
 //------------------------------------------------------
 // FUNCIONES DE CONFIGURACION/INICIALIZACION
@@ -213,12 +216,15 @@ int main() {
 			fsm_trans_excitacion_columnas, &(teclado));
 	fsm_t *tecla_fsm = fsm_new(TECLADO_ESPERA_TECLA,
 			fsm_trans_deteccion_pulsaciones, &(teclado));
+	fsm_t *display_fsm = fsm_new(DISPLAY_ESPERA_COLUMNA,
+			fsm_trans_excitacion_display, &(led_display));
 
 	next = millis();
 	while (1) {
 		fsm_fire(arkanoPi_fsm);
 		fsm_fire(teclado_fsm);
 		fsm_fire(tecla_fsm);
+		fsm_fire(display_fsm);
 
 		next += CLK_MS;
 		delay_until(next);
@@ -227,4 +233,6 @@ int main() {
 	fsm_destroy(arkanoPi_fsm);
 	fsm_destroy(teclado_fsm);
 	fsm_destroy(tecla_fsm);
+	fsm_destroy(led_display.tmr_refresco_display);
+	fsm_destroy(display_fsm);
 }
