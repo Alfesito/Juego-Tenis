@@ -123,7 +123,7 @@ void ActualizaLedDisplay(TipoLedDisplay *led_display) {
 	}
 	ExcitaColumnas(led_display->p_columna);
 	for(int i=0; i<NUM_FILAS_DISPLAY; i++){
-		if(led_display->pantalla.matriz[led_display->p_columna][i] == 1){
+		if(led_display->pantalla.matriz[i][led_display->p_columna] != 0){
 			digitalWrite(led_display->filas[i],LOW);
 		}
 	}
