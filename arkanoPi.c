@@ -1,6 +1,7 @@
 #include "arkanoPi.h"
 
 int flags = 0;
+int scores = 0;
 
 TipoSistema sistema;
 
@@ -84,6 +85,9 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema) {
 	wiringPiSetupGpio();
 	InicializaTeclado(&teclado);
 	InicializaLedDisplay(&led_display);
+	p_sistema->arkanoPi.p_pantalla = &(led_display.pantalla);
+	p_sistema->arkanoPi.tmr_actualizacion_juego = tmr_new(tmr_actualizacion_juego_isr);
+
 
 	piLock(STD_IO_BUFFER_KEY);
 	printf("\nIniciando el juego...\n");
@@ -105,12 +109,12 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema) {
 
 	// Lanzamos thread para exploracion del teclado convencional del PC
 	//result = piThreadCreate (thread_explora_teclado_PC);
-
+	/*
 	if (result != 0) {
 		printf("Thread didn't start!!!\n");
 		piUnlock(STD_IO_BUFFER_KEY); //
 		return -1;
-	}
+	}*/
 
 	piUnlock(STD_IO_BUFFER_KEY);
 
@@ -205,10 +209,6 @@ int main() {
 	// Configuracion e incializacion del sistema
 	ConfiguraInicializaSistema(&sistema);
 	// ..
-	sistema.arkanoPi.p_pantalla = &(led_display.pantalla);
-
-	sistema.arkanoPi.tmr_actualizacion_juego = tmr_new(
-			tmr_actualizacion_juego_isr);
 
 	fsm_t *arkanoPi_fsm = fsm_new(WAIT_START, arkanoPi, &sistema.arkanoPi);
 
@@ -230,11 +230,12 @@ int main() {
 		delay_until(next);
 	}
 	tmr_destroy((tmr_t*) (sistema.arkanoPi.tmr_actualizacion_juego));
-	fsm_destroy(arkanoPi_fsm);
-	fsm_destroy(teclado_fsm);
-	fsm_destroy(tecla_fsm);
-	fsm_destroy(led_display.tmr_refresco_display);
-	fsm_destroy(display_fsm);
+	//fsm_destroy(arkanoPi_fsm);
+	//fsm_destroy(teclado_fsm);
+	//fsm_destroy(tecla_fsm);
+	fsm_destroy((tmr_t*) led_display.tmr_refresco_display);
+	fsm_destroy((tmr_t*) teclado.tmr_duracion_columna);
+	//fsm_destroy(display_fsm);
 
 	return 0;
 }

@@ -26,7 +26,7 @@ void InicializaTeclado(TipoTeclado *p_teclado) {
 
 	for (int i = 0; i < NUM_COLUMNAS_TECLADO; i++) {
 		pinMode(teclado.columnas[i], OUTPUT);
-		digitalWrite(teclado.columnas[i], HIGH);
+		digitalWrite(teclado.columnas[i], LOW);
 	}
 
 	for (int i = 0; i < NUM_FILAS_TECLADO; i++) {
@@ -135,6 +135,8 @@ void TecladoExcitaColumna(fsm_t *this) {
 
 	// Llamada a ActualizaExcitacionTecladoGPIO con columna a activar como argumento
 	ActualizaExcitacionTecladoGPIO(p_teclado->columna_actual);
+	tmr_startms((tmr_t*) (teclado.tmr_duracion_columna),
+				TIMEOUT_COLUMNA_TECLADO);
 }
 
 void ProcesaTeclaPulsada(fsm_t *this) {
@@ -143,7 +145,6 @@ void ProcesaTeclaPulsada(fsm_t *this) {
 	// A completar por el alumno
 	// ...
 
-	pseudoWiringPiEnableDisplay(1);
 	piLock(KEYBOARD_KEY);
 	teclado.flags &= (~FLAG_TECLA_PULSADA);
 	piUnlock(KEYBOARD_KEY);

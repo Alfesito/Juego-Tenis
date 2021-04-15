@@ -73,5 +73,6 @@ enum fsm_state {
 	WAIT_END};
 
 extern int flags;
+extern int scores;
 
 #endif /* SYSTEMLIB_H_ */

@@ -41,11 +41,11 @@ void InicializaLedDisplay(TipoLedDisplay *led_display) {
 	// ...
 	for (int i = 0; i < NUM_COLUMNAS_DISPLAY; i++) {
 		pinMode(led_display->pines_control_columnas[i], OUTPUT);
-		digitalWrite(led_display->pines_control_columnas[i], HIGH);
+		digitalWrite(led_display->pines_control_columnas[i], LOW);
 	}
 	for (int i = 0; i < NUM_FILAS_DISPLAY; i++) {
 		pinMode(led_display->filas[i], OUTPUT);
-		digitalWrite(led_display->filas[i], LOW);
+		digitalWrite(led_display->filas[i], HIGH);
 	}
 	led_display->tmr_refresco_display = tmr_new(timer_refresco_display_isr);
 	tmr_startms((tmr_t*) (led_display->tmr_refresco_display),
@@ -182,6 +182,9 @@ void ActualizaExcitacionDisplay(fsm_t *this) {
 	piUnlock(MATRIX_KEY);
 
 	ActualizaLedDisplay(p_ledDisplay);
+	tmr_startms((tmr_t*) (led_display.tmr_refresco_display),
+				TIMEOUT_COLUMNA_DISPLAY);
+
 }
 
 //------------------------------------------------------

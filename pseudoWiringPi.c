@@ -463,8 +463,8 @@ void digitalWrite (int pin, int value)
 				}
 
 				// Actualizo pantalla
-				printf("\n[PANTALLA]\n\n");
-
+				printf("\n[PANTALLA]\n");
+				printf("SCORE: %i\n",scores);
 				for(i=0;i<7;i++) {
 					for(j=0;j<8;j++)
 						if(pseudoMatriz[i][j]) {
