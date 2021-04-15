@@ -494,7 +494,7 @@ void ActualizarJuego (fsm_t* this) {
 		piUnlock(SYSTEM_FLAGS_KEY);
 		return;
 	}else{
-		speed=2000;
+		speed = TIMEOUT_ACTUALIZA_JUEGO;
 	}
 
 	piLock(MATRIX_KEY);
