@@ -7,3 +7,13 @@ la dificultad del juego con niveles.
   - Cada vez que se inicie el juego o se resetee, la variable scores valdrá 0.
   - Para que el usuario pueda ver su puntuación, se añade a la pantalla una linea llamada SCORES, donde la puntuación se va actualizando conforme
   a la actuación del usuario.
+  
+INCREMENTO DE LA VELOCIDAD DE LA PELOTA:
+Para conseguir aumentar la velocidad de la pelota, usamos el time_out del timer tmr_actualizacion_juego, con lo que conseguimos un incremento de la
+velocidad de actualización de la pelota.
+· Código: 
+  - Dentro de la función ActualizarJuego ponemos una serie de condiciones que cuando se cumplan, hacen que aumente la velocidad de la pelota.
+  - Cuando se han roto 3 ladrillos la actualización del timeout desciende a 1500 y cuando se han roto 5 ladrillos disminuye a 1200 ladrillos.
+    Fimalmente, cuando se llega a 10 ladrillos rotos el juego se termina.
+   
+CAMBIAR EL COLOR DE LA PELOTA:
