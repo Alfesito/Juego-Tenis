@@ -484,11 +484,11 @@ void ActualizarJuego (fsm_t* this) {
 
 	ActualizaPosicionPelota(&(p_arkanoPi->pelota));
 
-	if(scores == 3){
+	if(scores >= 3){
 		speed=1500;
-	}else if(scores ==5){
+	}else if(scores >= 5){
 		speed=1200;
-	}else if(scores == 10){
+	}else if(scores > 10){
 		piLock(SYSTEM_FLAGS_KEY);
 		flags |= FLAG_FIN_JUEGO;
 		piUnlock(SYSTEM_FLAGS_KEY);
