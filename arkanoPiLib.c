@@ -357,6 +357,7 @@ int CompruebaFinalJuego(fsm_t* this) {
 	return result;
 }
 
+
 //------------------------------------------------------
 // FUNCIONES DE ACCION DE LA MAQUINA DE ESTADOS
 //------------------------------------------------------
@@ -483,19 +484,30 @@ void ActualizarJuego (fsm_t* this) {
 
 	ActualizaPosicionPelota(&(p_arkanoPi->pelota));
 
+	if(scores == 3){
+		speed=1500;
+	}else if(scores ==5){
+		speed=1200;
+	}else if(scores == 10){
+		piLock(SYSTEM_FLAGS_KEY);
+		flags |= FLAG_FIN_JUEGO;
+		piUnlock(SYSTEM_FLAGS_KEY);
+		return;
+	}else{
+		speed=2000;
+	}
+
 	piLock(MATRIX_KEY);
 	ActualizaPantalla(p_arkanoPi,0);
 	piUnlock(MATRIX_KEY);
 
-	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
+	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), speed);
 }
 
 // void FinalJuego (void): función encargada de mostrar en la ventana de
 // terminal los mensajes necesarios para informar acerca del resultado del juego.
 
 void FinalJuego (fsm_t* this) {
-	tipo_arkanoPi *p_arkanoPi;
-	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
 
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_FIN_JUEGO;
@@ -524,6 +536,7 @@ void ReseteaJuego (fsm_t* this) {
 	piUnlock(MATRIX_KEY);
 
 }
+
 
 //------------------------------------------------------
 // SUBRUTINAS DE ATENCION A LAS INTERRUPCIONES

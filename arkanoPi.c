@@ -2,6 +2,7 @@
 
 int flags = 0;
 int scores = 0;
+int speed = 0;
 
 TipoSistema sistema;
 
@@ -195,16 +196,12 @@ int main() {
 	// Maquina de estados: lista de transiciones
 	// {EstadoOrigen, CondicionDeDisparo, EstadoFinal, AccionesSiTransicion }
 	fsm_trans_t arkanoPi[] =
-			{ { WAIT_START, CompruebaBotonPulsado, WAIT_PUSH, InicializaJuego },
-					{ WAIT_PUSH, CompruebaTimeoutActualizacionJuego, WAIT_PUSH,
-							ActualizarJuego }, { WAIT_PUSH,
-							CompruebaMovimientoIzquierda, WAIT_PUSH,
-							MuevePalaIzquierda }, { WAIT_PUSH,
-							CompruebaMovimientoDerecha, WAIT_PUSH,
-							MuevePalaDerecha }, { WAIT_PUSH,
-							CompruebaFinalJuego, WAIT_END, FinalJuego }, {
-							WAIT_END, CompruebaBotonPulsado, WAIT_START,
-							ReseteaJuego }, { -1, NULL, -1, NULL }, };
+			{ 		{ WAIT_START, CompruebaBotonPulsado, WAIT_PUSH, InicializaJuego },
+					{ WAIT_PUSH, CompruebaTimeoutActualizacionJuego, WAIT_PUSH,ActualizarJuego },
+					{ WAIT_PUSH,CompruebaMovimientoIzquierda, WAIT_PUSH,MuevePalaIzquierda },
+					{ WAIT_PUSH,CompruebaMovimientoDerecha, WAIT_PUSH,MuevePalaDerecha },
+					{ WAIT_END, CompruebaBotonPulsado, WAIT_START,ReseteaJuego },
+					{ -1, NULL, -1, NULL }, };
 
 	// Configuracion e incializacion del sistema
 	ConfiguraInicializaSistema(&sistema);

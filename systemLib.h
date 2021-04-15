@@ -66,6 +66,9 @@
 #define FLAG_TIMER_JUEGO	0x04
 #define FLAG_BOTON 			0x08
 #define FLAG_FIN_JUEGO		0x10
+#define FLAG_N1 			0x20
+#define FLAG_N2				0x40
+
 
 enum fsm_state {
 	WAIT_START,
@@ -74,5 +77,6 @@ enum fsm_state {
 
 extern int flags;
 extern int scores;
+extern int speed;
 
 #endif /* SYSTEMLIB_H_ */
