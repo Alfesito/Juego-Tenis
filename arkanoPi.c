@@ -3,6 +3,8 @@
 int flags = 0;
 int scores = 0;
 int speed = 0;
+int bestscore = 0;
+int lifes = 3;//El usuario empieza con tres vidas
 
 TipoSistema sistema;
 
@@ -96,7 +98,8 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema) {
 			"\nBotón para encender y resetear -> 1"
 			"\nBotón de movimiento a la izquierda -> 4"
 			"\nBotón de movimiento a la derecha -> 6"
-			"\nBotón para apagar el juego -> F\n");
+			"\nBotón de pausa -> F"
+			"\nBotón para apagar el juego -> C\n");
 	piUnlock(STD_IO_BUFFER_KEY);
 
 	//
@@ -200,6 +203,8 @@ int main() {
 					{ WAIT_PUSH, CompruebaTimeoutActualizacionJuego, WAIT_PUSH,ActualizarJuego },
 					{ WAIT_PUSH,CompruebaMovimientoIzquierda, WAIT_PUSH,MuevePalaIzquierda },
 					{ WAIT_PUSH,CompruebaMovimientoDerecha, WAIT_PUSH,MuevePalaDerecha },
+					{ WAIT_PUSH,CompruebaPausa, WAIT_PUSH, PausaJuego },
+					{ WAIT_PUSH, CompruebaFinalJuego, WAIT_END, FinalJuego },
 					{ WAIT_END, CompruebaBotonPulsado, WAIT_START,ReseteaJuego },
 					{ -1, NULL, -1, NULL }, };
 

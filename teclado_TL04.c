@@ -161,9 +161,9 @@ void ProcesaTeclaPulsada(fsm_t *this) {
 			piLock(SYSTEM_FLAGS_KEY);
 			flags |= FLAG_BOTON;
 			piUnlock(SYSTEM_FLAGS_KEY);
-			piLock(STD_IO_BUFFER_KEY);
-			printf("Empieza el Juego\n");
-			piUnlock(STD_IO_BUFFER_KEY);
+			//piLock(STD_IO_BUFFER_KEY);
+			//printf("Empieza el Juego\n");
+			//piUnlock(STD_IO_BUFFER_KEY);
 			p_teclado->teclaPulsada.row = -1;
 			p_teclado->teclaPulsada.col = -1;
 		}
@@ -187,14 +187,21 @@ void ProcesaTeclaPulsada(fsm_t *this) {
 
 	case COLUMNA_4:
 		if (p_teclado->teclaPulsada.row == FILA_1) {
+			piLock (SYSTEM_FLAGS_KEY);
+			flags |=FLAG_FIN_JUEGO;
+			piUnlock (SYSTEM_FLAGS_KEY);
 			p_teclado->teclaPulsada.row = -1;
 			p_teclado->teclaPulsada.col = -1;
-			exit(0);
 		}
-		piLock(STD_IO_BUFFER_KEY);
-		printf("Juego apagado\n");
-		piUnlock(STD_IO_BUFFER_KEY);
+		if (p_teclado->teclaPulsada.row == FILA_4) {
+			piLock (SYSTEM_FLAGS_KEY);
+			flags |=FLAG_PAUSA;
+			piUnlock (SYSTEM_FLAGS_KEY);
+			p_teclado->teclaPulsada.row = -1;
+			p_teclado->teclaPulsada.col = -1;
+		}
 		break;
+
 	default:
 		break;
 	}

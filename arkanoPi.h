@@ -22,6 +22,7 @@ int CompruebaMovimientoIzquierda(fsm_t* this);
 int CompruebaMovimientoDerecha(fsm_t* this);
 int CompruebaTimeoutActualizacionJuego (fsm_t* this);
 int CompruebaFinalJuego(fsm_t* this);
+int CompruebaPausa(fsm_t* this);
 
 //------------------------------------------------------
 // FUNCIONES DE ACCION DE LA MAQUINA DE ESTADOS
@@ -32,6 +33,7 @@ void MuevePalaDerecha (fsm_t* this);
 void ActualizarJuego (fsm_t* this);
 void FinalJuego (fsm_t* this);
 void ReseteaJuego (fsm_t* this);
+void PausaJuego (fsm_t* this);
 
 //------------------------------------------------------
 // FUNCIONES DE CONFIGURACION/INICIALIZACION

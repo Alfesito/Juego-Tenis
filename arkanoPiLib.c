@@ -36,6 +36,16 @@ void ReseteaPantalla (tipo_pantalla *p_pantalla) {
 	}
 }
 
+void PausaPantalla (tipo_pantalla *p_pantalla) {
+	int i=0, j=0;
+
+	for(i=0;i<NUM_FILAS_DISPLAY;i++) {
+		for(j=0;j<NUM_COLUMNAS_DISPLAY;j++) {
+			p_pantalla->matriz[i][j];
+		}
+	}
+}
+
 
 //------------------------------------------------------
 // FUNCIONES DE INICIALIZACION / RESET
@@ -47,6 +57,16 @@ void InicializaLadrillos(tipo_pantalla *p_ladrillos) {
 	for(i=0;i<NUM_FILAS_DISPLAY;i++) {
 		for(j=0;j<NUM_COLUMNAS_DISPLAY;j++) {
 			p_ladrillos->matriz[i][j] = ladrillos_basico[i][j];
+		}
+	}
+}
+
+void PausaLadrillos(tipo_pantalla *p_ladrillos) {
+	int i=0, j=0;
+
+	for(i=0;i<NUM_FILAS_DISPLAY;i++) {
+		for(j=0;j<NUM_COLUMNAS_DISPLAY;j++) {
+			p_ladrillos->matriz[i][j];
 		}
 	}
 }
@@ -68,10 +88,23 @@ void InicializaPelota(tipo_pelota *p_pelota) {
 	CambiarDireccionPelota(p_pelota, rand() % p_pelota->num_posibles_trayectorias);
 }
 
+void PausaPelota(tipo_pelota *p_pelota) {
+	p_pelota->x;
+	p_pelota->y;
+}
+
 void InicializaPala(tipo_pala *p_pala) {
 	// Pala inicialmente en el centro de la pantalla
 	p_pala->x = NUM_COLUMNAS_DISPLAY/2 - p_pala->ancho/2;
 	p_pala->y = NUM_FILAS_DISPLAY - 1;
+	p_pala->ancho = NUM_COLUMNAS_PALA;
+	p_pala->alto = NUM_FILAS_PALA;
+}
+
+void PausaPala(tipo_pala *p_pala) {
+	// Pala inicialmente en el centro de la pantalla
+	p_pala->x;
+	p_pala->y;
 	p_pala->ancho = NUM_COLUMNAS_PALA;
 	p_pala->alto = NUM_FILAS_PALA;
 }
@@ -180,6 +213,13 @@ void ResetArkanoPi(tipo_arkanoPi *p_arkanoPi) {
 	InicializaLadrillos((tipo_pantalla*)(&(p_arkanoPi->ladrillos)));
 	InicializaPelota((tipo_pelota*)(&(p_arkanoPi->pelota)));
 	InicializaPala((tipo_pala*)(&(p_arkanoPi->pala)));
+}
+
+void PausaArkanoPi(tipo_arkanoPi *p_arkanoPi){
+	PausaPantalla((tipo_pantalla*)(p_arkanoPi->p_pantalla));
+	PausaLadrillos((tipo_pantalla*)(&(p_arkanoPi->ladrillos)));
+	PausaPelota((tipo_pelota*)(&(p_arkanoPi->pelota)));
+	PausaPala((tipo_pala*)(&(p_arkanoPi->pala)));
 }
 
 void CambiarDireccionPelota(tipo_pelota *p_pelota, enum t_direccion direccion) {
@@ -357,6 +397,16 @@ int CompruebaFinalJuego(fsm_t* this) {
 	return result;
 }
 
+int CompruebaPausa(fsm_t* this) {
+	int result = 0;
+
+	piLock (SYSTEM_FLAGS_KEY);
+	result = (flags & FLAG_PAUSA);
+	piUnlock (SYSTEM_FLAGS_KEY);
+
+	return result;
+}
+
 
 //------------------------------------------------------
 // FUNCIONES DE ACCION DE LA MAQUINA DE ESTADOS
@@ -450,9 +500,30 @@ void ActualizarJuego (fsm_t* this) {
 	}
 
 	if(CompruebaFallo(*p_arkanoPi)) {
-		piLock(SYSTEM_FLAGS_KEY);
-		flags |= FLAG_FIN_JUEGO;
-		piUnlock(SYSTEM_FLAGS_KEY);
+
+		lifes--;
+		if(lifes>=0){
+			piLock (SYSTEM_FLAGS_KEY);
+			flags |= FLAG_BOTON;
+			piUnlock(SYSTEM_FLAGS_KEY);
+
+			scores=0;
+
+			piLock(SYSTEM_FLAGS_KEY);
+			flags &= ~FLAG_BOTON;
+			piUnlock(SYSTEM_FLAGS_KEY);
+
+			InicializaArkanoPi(p_arkanoPi, 0);	//valor del parametro debug?? 1?
+
+			tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
+			pseudoWiringPiEnableDisplay(1);
+		}else{
+			piLock(SYSTEM_FLAGS_KEY);
+			flags |= FLAG_FIN_JUEGO;
+			piUnlock(SYSTEM_FLAGS_KEY);
+			//exit(0);
+		}
+
 		/*piLock(STD_IO_BUFFER_KEY);
 		printf("GAME OVER\n");
 		piUnlock(STD_IO_BUFFER_KEY);*/
@@ -478,6 +549,7 @@ void ActualizarJuego (fsm_t* this) {
 			piLock(SYSTEM_FLAGS_KEY);
 			flags |= FLAG_FIN_JUEGO;
 			piUnlock(SYSTEM_FLAGS_KEY);
+			//exit(0);
 			return;
 		}
 	}
@@ -492,9 +564,14 @@ void ActualizarJuego (fsm_t* this) {
 		piLock(SYSTEM_FLAGS_KEY);
 		flags |= FLAG_FIN_JUEGO;
 		piUnlock(SYSTEM_FLAGS_KEY);
+		//exit(0);
 		return;
 	}else{
 		speed = TIMEOUT_ACTUALIZA_JUEGO;
+	}
+
+	if(scores>bestscore){
+		bestscore=scores;
 	}
 
 	piLock(MATRIX_KEY);
@@ -531,10 +608,23 @@ void ReseteaJuego (fsm_t* this) {
 	ResetArkanoPi(p_arkanoPi);
 	scores=0;
 
-	piLock(MATRIX_KEY);
-	ReseteaPantalla(p_arkanoPi->p_pantalla);
-	piUnlock(MATRIX_KEY);
+	//piLock(MATRIX_KEY);
+	//ReseteaPantalla(p_arkanoPi->p_pantalla);
+	//piUnlock(MATRIX_KEY);
 
+}
+
+void PausaJuego(fsm_t* this){
+	tipo_arkanoPi* p_arkanoPi;
+	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
+
+	piLock (SYSTEM_FLAGS_KEY);
+	flags &= ~FLAG_PAUSA;
+	piUnlock(SYSTEM_FLAGS_KEY);
+
+	PausaArkanoPi(p_arkanoPi);
+
+	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), 0);
 }
 
 
