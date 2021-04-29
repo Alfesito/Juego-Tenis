@@ -517,6 +517,7 @@ void ActualizarJuego (fsm_t* this) {
 			scores=0;
 
 			InicializaPelota(&(p_arkanoPi->pelota));
+			InicializaLadrillos((tipo_pantalla*)(&(p_arkanoPi->ladrillos)));
 
 			tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
 
