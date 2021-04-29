@@ -27,6 +27,7 @@ Código:
 
 FUNCIONALIDAD VIDAS:
 Esta funcionalidad está relacionada con la funcionalidad scores, ya que el usuario tiene tres oportunidades(vidas) para sacar la mejor puntación posible.
+
 FUNCIONALIDAD PAUSA:
 El objetivo de esta funcionalidad es que el usuario pueda parar el juego y luego puder empezar a jugar donde lo dejo al pulsar el boton de pausa. Esto se
 realiza gracias a la maquina de estados de y los flags de pausa.
