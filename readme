@@ -23,5 +23,8 @@ Código:
   - En pseudowaringPi en el apartado de static int pseudoMatrizColor, tenemos definido de antemano que las dos primeras columnas desde la zona 
   superior sean de color rojo (31), y la última fila de color azul(34).
   - Las filas intermedias tenian asignado en primer lugar 0, por tanto, salía de color blanco, y nosotros hemos cambiado 
-    ese valor po el número 32 que representa el color verde, de esta forma mientas la pelota se encuentre en esa posición tomará el color verde.
+    ese valor por el número 32 que representa el color verde, de esta forma mientas la pelota se encuentre en esa posición tomará el color verde.
+
+FUNCIONALIDAD VIDAS:
+Esta funcionalidad está relacionada con la funcionalidad scores, ya que el usuario tiene tres oportunidades(vidas) para sacar la mejor puntación posible.
 
