@@ -513,20 +513,13 @@ void ActualizarJuego (fsm_t* this) {
 
 		lifes--;
 		if(lifes>=0){
-			piLock (SYSTEM_FLAGS_KEY);
-			flags |= FLAG_BOTON;
-			piUnlock(SYSTEM_FLAGS_KEY);
 
 			scores=0;
 
-			piLock(SYSTEM_FLAGS_KEY);
-			flags &= ~FLAG_BOTON;
-			piUnlock(SYSTEM_FLAGS_KEY);
-
-			InicializaArkanoPi(p_arkanoPi, 0);	//valor del parametro debug?? 1?
+			InicializaPelota(&(p_arkanoPi->pelota));
 
 			tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
-			pseudoWiringPiEnableDisplay(1);
+
 		}else{
 			piLock(SYSTEM_FLAGS_KEY);
 			flags |= FLAG_FIN_JUEGO;
