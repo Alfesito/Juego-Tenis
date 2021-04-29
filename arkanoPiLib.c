@@ -407,6 +407,16 @@ int CompruebaPausa(fsm_t* this) {
 	return result;
 }
 
+int CompruebaFinalPausa(fsm_t* this) {
+	int result = 0;
+
+	piLock (SYSTEM_FLAGS_KEY);
+	result = (flags & FLAG_FINAL_PAUSA);
+	piUnlock (SYSTEM_FLAGS_KEY);
+
+	return result;
+}
+
 
 //------------------------------------------------------
 // FUNCIONES DE ACCION DE LA MAQUINA DE ESTADOS
@@ -627,6 +637,16 @@ void PausaJuego(fsm_t* this){
 	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), 0);
 }
 
+void FinalPausaJuego(fsm_t* this){
+	tipo_arkanoPi* p_arkanoPi;
+	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
+
+	piLock (SYSTEM_FLAGS_KEY);
+	flags &= ~FLAG_FINAL_PAUSA;
+	piUnlock(SYSTEM_FLAGS_KEY);
+
+	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), speed);
+}
 
 //------------------------------------------------------
 // SUBRUTINAS DE ATENCION A LAS INTERRUPCIONES

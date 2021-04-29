@@ -1,6 +1,7 @@
 #include "arkanoPi.h"
 
 int flags = 0;
+int pausa = 0;
 int scores = 0;
 int speed = 0;
 int bestscore = 0;
@@ -98,7 +99,7 @@ int ConfiguraInicializaSistema(TipoSistema *p_sistema) {
 			"\nBotón para encender y resetear -> 1"
 			"\nBotón de movimiento a la izquierda -> 4"
 			"\nBotón de movimiento a la derecha -> 6"
-			"\nBotón de pausa -> F"
+			"\nBotón de pausa y jugar después de pausa -> F"
 			"\nBotón para apagar el juego -> C\n");
 	piUnlock(STD_IO_BUFFER_KEY);
 
@@ -204,6 +205,7 @@ int main() {
 					{ WAIT_PUSH,CompruebaMovimientoIzquierda, WAIT_PUSH,MuevePalaIzquierda },
 					{ WAIT_PUSH,CompruebaMovimientoDerecha, WAIT_PUSH,MuevePalaDerecha },
 					{ WAIT_PUSH,CompruebaPausa, WAIT_PUSH, PausaJuego },
+					{ WAIT_PUSH,CompruebaFinalPausa, WAIT_PUSH, FinalPausaJuego },
 					{ WAIT_PUSH, CompruebaFinalJuego, WAIT_END, FinalJuego },
 					{ WAIT_END, CompruebaBotonPulsado, WAIT_START,ReseteaJuego },
 					{ -1, NULL, -1, NULL }, };
