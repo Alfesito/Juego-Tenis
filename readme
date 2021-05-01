@@ -32,3 +32,6 @@ FUNCIONALIDAD PAUSA:
 El objetivo de esta funcionalidad es que el usuario pueda parar el juego y luego puder empezar a jugar donde lo dejo al pulsar el boton de pausa. Esto se
 realiza gracias a la maquina de estados de y los flags de pausa.
 
+MEJORA DE LA INTERFAZ:
+Para una mejor experiencia del usuario, hemos decicido escribir por pantalla la puntuación maxima, las vidas, el nivel del juego y la información sobre la partida.
+Todo ello para que el usuario sepa en todo momento cual es su situación en el juego.
