@@ -6,6 +6,9 @@ int scores = 0;
 int speed = 0;
 int bestscore = 0;
 int lifes = 3;//El usuario empieza con tres vidas
+int nivel = 1;
+char *info="";
+int play=1;
 
 TipoSistema sistema;
 
@@ -237,8 +240,8 @@ int main() {
 	//fsm_destroy(arkanoPi_fsm);
 	//fsm_destroy(teclado_fsm);
 	//fsm_destroy(tecla_fsm);
-	fsm_destroy((tmr_t*) led_display.tmr_refresco_display);
-	fsm_destroy((tmr_t*) teclado.tmr_duracion_columna);
+	//fsm_destroy((tmr_t*) led_display.tmr_refresco_display);
+	//fsm_destroy((tmr_t*) teclado.tmr_duracion_columna);
 	//fsm_destroy(display_fsm);
 
 	return 0;

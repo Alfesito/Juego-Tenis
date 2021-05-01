@@ -9,6 +9,26 @@ int ladrillos_basico[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
 	{0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0},
 };
+/*
+char *ladrillos_game_over[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
+	"  GAME  ",
+	"  OVER  ",
+	"        ",
+	"        ",
+	"        ",
+	"        ",
+	"        ",
+};
+
+char *ladrillos_game_win[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
+	"   YOU  ",
+	"   WIN! ",
+	"        ",
+	"        ",
+	"        ",
+	"        ",
+	"        ",
+};*/
 
 //------------------------------------------------------
 // FUNCIONES DE VISUALIZACION (ACTUALIZACION DEL OBJETO PANTALLA QUE LUEGO USARA EL DISPLAY)
@@ -25,6 +45,27 @@ void PintaMensajeInicialPantalla (tipo_pantalla *p_pantalla, tipo_pantalla *p_pa
 
 	return;
 }
+/*
+void PintaMensajeFinalPantalla (tipo_pantalla *p_pantalla) {
+	int i, j = 0;
+
+
+	if(scores==10){
+		for(i=0;i<NUM_FILAS_DISPLAY;i++) {
+			for(j=0;j<NUM_COLUMNAS_DISPLAY;j++) {
+				p_pantalla->matriz[i][j] = ladrillos_game_win;
+			}
+		}
+	}else{
+		for(i=0;i<NUM_FILAS_DISPLAY;i++) {
+			for(j=0;j<NUM_COLUMNAS_DISPLAY;j++) {
+				p_pantalla->matriz[i][j] = ladrillos_game_over;
+			}
+		}
+	}
+
+	return;
+}*/
 
 void ReseteaPantalla (tipo_pantalla *p_pantalla) {
 	int i=0, j=0;
@@ -384,6 +425,10 @@ int CompruebaTimeoutActualizacionJuego (fsm_t* this) {
 	result = (flags & FLAG_TIMER_JUEGO);
 	piUnlock (SYSTEM_FLAGS_KEY);
 
+	if(result == 1){
+		info="Iniciando juego";
+	}
+
 	return result;
 }
 
@@ -391,7 +436,7 @@ int CompruebaFinalJuego(fsm_t* this) {
 	int result = 0;
 
 	piLock (SYSTEM_FLAGS_KEY);
-	result = (flags & FLAG_BOTON);
+	result = (flags & FLAG_FIN_JUEGO);
 	piUnlock (SYSTEM_FLAGS_KEY);
 
 	return result;
@@ -430,6 +475,8 @@ void InicializaJuego(fsm_t* this) {
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
 
 	scores=0;
+	info="";
+	info="Iniciando juego";
 
 	piLock(SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_BOTON;
@@ -498,6 +545,8 @@ void ActualizarJuego (fsm_t* this) {
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
 
+	info="Jugando...        ";
+
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_TIMER_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
@@ -522,6 +571,8 @@ void ActualizarJuego (fsm_t* this) {
 			tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), TIMEOUT_ACTUALIZA_JUEGO);
 
 		}else{
+			lifes = 0;
+			info="Has perdido         ";
 			piLock(SYSTEM_FLAGS_KEY);
 			flags |= FLAG_FIN_JUEGO;
 			piUnlock(SYSTEM_FLAGS_KEY);
@@ -549,7 +600,8 @@ void ActualizarJuego (fsm_t* this) {
 	if(CompruebaReboteLadrillo(p_arkanoPi)){//
 		p_arkanoPi->pelota.trayectoria.yv = -p_arkanoPi->pelota.trayectoria.yv;
 
-		if(CalculaLadrillosRestantes(&(p_arkanoPi->ladrillos)) <= 0){
+		if(CalculaLadrillosRestantes(&(p_arkanoPi->ladrillos)) <= 0){//CalculaLadrillosRestantes(&(p_arkanoPi->ladrillos)) <= 0
+			info="Has perdido         ";
 			piLock(SYSTEM_FLAGS_KEY);
 			flags |= FLAG_FIN_JUEGO;
 			piUnlock(SYSTEM_FLAGS_KEY);
@@ -560,16 +612,23 @@ void ActualizarJuego (fsm_t* this) {
 
 	ActualizaPosicionPelota(&(p_arkanoPi->pelota));
 
-	if(scores >= 3){
-		speed=1500;
-	}else if(scores >= 5){
-		speed=1200;
-	}else if(scores > 10){
+	if(scores < 3){//scores < 3
+		nivel=1;
+		speed = TIMEOUT_ACTUALIZA_JUEGO;
+	}else if(scores < 5){//scores < 5
+		nivel=2;
+		speed=1300;
+	}else if(scores < 10){//scores < 10
+		nivel=3;
+		speed=1000;
+
+	}else if(scores >= 10){//scores >= 10
+		info="Has ganado!!        ";
+
 		piLock(SYSTEM_FLAGS_KEY);
 		flags |= FLAG_FIN_JUEGO;
 		piUnlock(SYSTEM_FLAGS_KEY);
-		//exit(0);
-		return;
+
 	}else{
 		speed = TIMEOUT_ACTUALIZA_JUEGO;
 	}
@@ -590,11 +649,13 @@ void ActualizarJuego (fsm_t* this) {
 
 void FinalJuego (fsm_t* this) {
 
+	play=0;
+
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
-	pseudoWiringPiEnableDisplay(0);
+	//pseudoWiringPiEnableDisplay(0);
 }
 
 //void ReseteaJuego (void): función encargada de llevar a cabo la
@@ -605,16 +666,15 @@ void ReseteaJuego (fsm_t* this) {
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
 
+	info="Reseteo       ";
+
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_BOTON;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
 	ResetArkanoPi(p_arkanoPi);
 	scores=0;
-
-	//piLock(MATRIX_KEY);
-	//ReseteaPantalla(p_arkanoPi->p_pantalla);
-	//piUnlock(MATRIX_KEY);
+	lifes=3;
 
 }
 
@@ -622,11 +682,17 @@ void PausaJuego(fsm_t* this){
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
 
+	info="Pausa        ";
+
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_PAUSA;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
 	PausaArkanoPi(p_arkanoPi);
+
+	piLock(MATRIX_KEY);
+	ActualizaPantalla(p_arkanoPi,0);
+	piUnlock(MATRIX_KEY);
 
 	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), 0);
 }

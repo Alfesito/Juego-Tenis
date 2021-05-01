@@ -81,5 +81,8 @@ extern int speed;
 extern int bestscore;
 extern int lifes;
 extern int pausa;
+extern int nivel;
+extern char *info;
+extern int play;
 
 #endif /* SYSTEMLIB_H_ */

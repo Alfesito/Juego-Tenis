@@ -82,6 +82,7 @@ int CalculaLadrillosRestantes(tipo_pantalla *p_ladrillos);
 // PROCEDIMIENTOS PARA LA VISUALIZACION DEL JUEGO
 //------------------------------------------------------
 void PintaMensajeInicialPantalla (tipo_pantalla *p_pantalla, tipo_pantalla *p_pantalla_inicial);
+void PintaMensajeFinalPantalla (tipo_pantalla *p_pantalla);
 void PintaPantallaPorTerminal (tipo_pantalla *p_pantalla);
 void PintaLadrillos(tipo_pantalla *p_ladrillos, tipo_pantalla *p_pantalla);
 void PintaPala(tipo_pala *p_pala, tipo_pantalla *p_pantalla);
