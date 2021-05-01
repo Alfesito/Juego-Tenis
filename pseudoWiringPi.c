@@ -469,7 +469,7 @@ void digitalWrite (int pin, int value)
 				// Actualizo pantalla
 				printf("\n[ARKANOPI]\n");
 				//printf("VIDAS: %i\n", lifes);
-				printf("MAX. PUNTUACIÓN:%i | VIDAS:%i | NV: %i | INFO:%s \n",bestscore,lifes,nivel,info);
+				printf("MAX. PUNTUACIÓN:%i | VIDAS:%i | NV:%i | INFO:%s \n",bestscore,lifes,nivel,info);
 				for(i=0;i<7;i++) {
 					for(j=0;j<8;j++)
 						if(pseudoMatriz[i][j]) {
