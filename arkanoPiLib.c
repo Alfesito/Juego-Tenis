@@ -425,10 +425,6 @@ int CompruebaTimeoutActualizacionJuego (fsm_t* this) {
 	result = (flags & FLAG_TIMER_JUEGO);
 	piUnlock (SYSTEM_FLAGS_KEY);
 
-	if(result == 1){
-		info="Iniciando juego";
-	}
-
 	return result;
 }
 
@@ -584,6 +580,7 @@ void ActualizarJuego (fsm_t* this) {
 		piUnlock(STD_IO_BUFFER_KEY);*/
 		return;
 	}else if(CompruebaRebotePala(*p_arkanoPi)){
+		printf("%c",7);
 		switch(p_arkanoPi->pelota.x + p_arkanoPi->pelota.trayectoria.xv - p_arkanoPi->pala.x){
 			case 0:
 				CambiarDireccionPelota(&(p_arkanoPi->pelota),ARRIBA_IZQUIERDA);
@@ -599,6 +596,7 @@ void ActualizarJuego (fsm_t* this) {
 
 	if(CompruebaReboteLadrillo(p_arkanoPi)){//
 		p_arkanoPi->pelota.trayectoria.yv = -p_arkanoPi->pelota.trayectoria.yv;
+		printf("%c",7);
 
 		if(CalculaLadrillosRestantes(&(p_arkanoPi->ladrillos)) <= 0){//CalculaLadrillosRestantes(&(p_arkanoPi->ladrillos)) <= 0
 			info="Has perdido         ";
