@@ -192,13 +192,11 @@ void ProcesaTeclaPulsada(fsm_t *this) {
 			p_teclado->teclaPulsada.col = -1;
 		}
 		if (p_teclado->teclaPulsada.row == FILA_4) {
-			if(pausa==0){
-				pausa = 1;
+			if(speed!=0){
 				piLock (SYSTEM_FLAGS_KEY);
 				flags |=FLAG_PAUSA;
 				piUnlock (SYSTEM_FLAGS_KEY);
 			}else{
-				pausa = 0;
 				piLock (SYSTEM_FLAGS_KEY);
 				flags |=FLAG_FINAL_PAUSA;
 				piUnlock (SYSTEM_FLAGS_KEY);

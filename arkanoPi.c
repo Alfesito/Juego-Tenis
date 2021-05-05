@@ -1,14 +1,12 @@
 #include "arkanoPi.h"
 
 int flags = 0;
-int pausa = 0;
 int scores = 0;
 int speed = 0;
 int bestscore = 0;
 int lifes = 3;//El usuario empieza con tres vidas
 int nivel = 1;
 char *info="";
-int play=1;
 
 TipoSistema sistema;
 

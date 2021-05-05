@@ -647,8 +647,6 @@ void ActualizarJuego (fsm_t* this) {
 
 void FinalJuego (fsm_t* this) {
 
-	play=0;
-
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
