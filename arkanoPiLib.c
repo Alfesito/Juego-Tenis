@@ -320,7 +320,7 @@ int CompruebaReboteLadrillo (tipo_arkanoPi *p_arkanoPi) {
 		// La pelota ha entrado en el area de ladrillos
 		// y descontamos el numero de golpes que resta para destruir el ladrillo
 		p_arkanoPi->ladrillos.matriz[p_posible_ladrillo_y][p_posible_ladrillo_x] = p_arkanoPi->ladrillos.matriz[p_posible_ladrillo_y][p_posible_ladrillo_x] - 1;
-		scores++;
+		//scores++;
 		return 1;
 	}
 	return 0;
@@ -470,7 +470,7 @@ void InicializaJuego(fsm_t* this) {
 	tipo_arkanoPi *p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
 
-	scores=0;
+	p_arkanoPi->score=0;
 	info="";
 	info="Iniciando juego";
 
@@ -559,7 +559,7 @@ void ActualizarJuego (fsm_t* this) {
 		lifes--;
 		if(lifes>=0){
 
-			scores=0;
+			p_arkanoPi->score=0;
 
 			InicializaPelota(&(p_arkanoPi->pelota));
 			InicializaLadrillos((tipo_pantalla*)(&(p_arkanoPi->ladrillos)));
@@ -595,6 +595,7 @@ void ActualizarJuego (fsm_t* this) {
 	}
 
 	if(CompruebaReboteLadrillo(p_arkanoPi)){//
+		p_arkanoPi->score++;
 		p_arkanoPi->pelota.trayectoria.yv = -p_arkanoPi->pelota.trayectoria.yv;
 		printf("%c",7);
 
@@ -610,17 +611,17 @@ void ActualizarJuego (fsm_t* this) {
 
 	ActualizaPosicionPelota(&(p_arkanoPi->pelota));
 
-	if(scores < 3){//scores < 3
+	if(p_arkanoPi->score < 3){//scores < 3
 		nivel=1;
 		speed = TIMEOUT_ACTUALIZA_JUEGO;
-	}else if(scores < 5){//scores < 5
+	}else if(p_arkanoPi->score < 5){//scores < 5
 		nivel=2;
 		speed=1300;
-	}else if(scores < 10){//scores < 10
+	}else if(p_arkanoPi->score < 10){//scores < 10
 		nivel=3;
 		speed=1000;
 
-	}else if(scores >= 10){//scores >= 10
+	}else if(p_arkanoPi->score >= 10){//scores >= 10
 		info="Has ganado!!        ";
 
 		piLock(SYSTEM_FLAGS_KEY);
@@ -631,8 +632,8 @@ void ActualizarJuego (fsm_t* this) {
 		speed = TIMEOUT_ACTUALIZA_JUEGO;
 	}
 
-	if(scores>bestscore){
-		bestscore=scores;
+	if(p_arkanoPi->score>bestscore){
+		bestscore=p_arkanoPi->score;
 	}
 
 	piLock(MATRIX_KEY);
@@ -669,7 +670,7 @@ void ReseteaJuego (fsm_t* this) {
 	piUnlock(SYSTEM_FLAGS_KEY);
 
 	ResetArkanoPi(p_arkanoPi);
-	scores=0;
+	p_arkanoPi->score=0;
 	lifes=3;
 
 }
@@ -701,6 +702,14 @@ void FinalPausaJuego(fsm_t* this){
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_FINAL_PAUSA;
 	piUnlock(SYSTEM_FLAGS_KEY);
+
+	if(p_arkanoPi->score < 5){
+		speed=1300;
+	}else if(p_arkanoPi->score < 10){
+		speed=1000;
+	}else{
+		speed = TIMEOUT_ACTUALIZA_JUEGO;
+	}
 
 	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), speed);
 }

@@ -77,7 +77,6 @@ enum fsm_state {
 	WAIT_END};
 
 extern int flags;
-extern int scores;
 extern int speed;
 extern int bestscore;
 extern int lifes;

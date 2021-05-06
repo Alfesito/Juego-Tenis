@@ -51,7 +51,7 @@ typedef struct {
 	tipo_pala pala;
 	tipo_pelota pelota;
 	tmr_t *tmr_actualizacion_juego;
-	//int scores;
+	int score;
 } tipo_arkanoPi;
 
 //------------------------------------------------------------------------

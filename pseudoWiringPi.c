@@ -470,7 +470,7 @@ void digitalWrite (int pin, int value)
 				for(i=0;i<7;i++) {
 					for(j=0;j<8;j++)
 						if(pseudoMatriz[i][j]) {
-							if(scores==10){
+							if(bestscore==10){
 								printf("\033[%dm", pseudoMatrizColor[i][j]);
 								printf("%d\033[0m", pseudoMatriz[i][j]);
 								//printf("%s\033[0m", matriz_game_win);
