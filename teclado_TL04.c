@@ -200,6 +200,14 @@ void ProcesaTeclaPulsada(fsm_t *this) {
 				piLock (SYSTEM_FLAGS_KEY);
 				flags |=FLAG_FINAL_PAUSA;
 				piUnlock (SYSTEM_FLAGS_KEY);
+
+				if(scores < 5){
+						speed=1300;
+					}else if(scores < 10){
+						speed=1000;
+					}else{
+						speed = TIMEOUT_ACTUALIZA_JUEGO;
+					}
 			}
 
 

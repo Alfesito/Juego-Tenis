@@ -690,7 +690,8 @@ void PausaJuego(fsm_t* this){
 	ActualizaPantalla(p_arkanoPi,0);
 	piUnlock(MATRIX_KEY);
 
-	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), 0);
+	speed=0;
+	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), speed);
 }
 
 void FinalPausaJuego(fsm_t* this){

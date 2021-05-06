@@ -93,9 +93,6 @@ static int pseudoMatriz[7][8] = {
 		{0,0,0,0,0,0,0,0},
 };
 
-static char *matriz_game_over="GAME OVER";
-
-static char *matriz_game_win="YOU WIN!!";
 
 static int GPIO_to_cols[64]; // Array para el mapeo de pines GPIO a columnas del decoder (el valor codificado corresponde a la columna del display emulado)
 static int GPIO_to_rows[64]; // Array para el mapeo de pines GPIO a filas del display
@@ -473,12 +470,7 @@ void digitalWrite (int pin, int value)
 				for(i=0;i<7;i++) {
 					for(j=0;j<8;j++)
 						if(pseudoMatriz[i][j]) {
-							if(scores<10 && play==0){
-								printf("\033[%dm", pseudoMatrizColor[i][j]);
-								printf("%d\033[0m", pseudoMatriz[i][j]);
-								//printf("%s\033[0m",matriz_game_over);
-								pseudoWiringPiEnableDisplay(0);
-							}else if(scores==10){
+							if(scores==10){
 								printf("\033[%dm", pseudoMatrizColor[i][j]);
 								printf("%d\033[0m", pseudoMatriz[i][j]);
 								//printf("%s\033[0m", matriz_game_win);
