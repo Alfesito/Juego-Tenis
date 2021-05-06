@@ -9,26 +9,6 @@ int ladrillos_basico[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
 	{0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0},
 };
-/*
-char *ladrillos_game_over[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
-	"  GAME  ",
-	"  OVER  ",
-	"        ",
-	"        ",
-	"        ",
-	"        ",
-	"        ",
-};
-
-char *ladrillos_game_win[NUM_FILAS_DISPLAY][NUM_COLUMNAS_DISPLAY] = {
-	"   YOU  ",
-	"   WIN! ",
-	"        ",
-	"        ",
-	"        ",
-	"        ",
-	"        ",
-};*/
 
 //------------------------------------------------------
 // FUNCIONES DE VISUALIZACION (ACTUALIZACION DEL OBJETO PANTALLA QUE LUEGO USARA EL DISPLAY)
@@ -45,27 +25,6 @@ void PintaMensajeInicialPantalla (tipo_pantalla *p_pantalla, tipo_pantalla *p_pa
 
 	return;
 }
-/*
-void PintaMensajeFinalPantalla (tipo_pantalla *p_pantalla) {
-	int i, j = 0;
-
-
-	if(scores==10){
-		for(i=0;i<NUM_FILAS_DISPLAY;i++) {
-			for(j=0;j<NUM_COLUMNAS_DISPLAY;j++) {
-				p_pantalla->matriz[i][j] = ladrillos_game_win;
-			}
-		}
-	}else{
-		for(i=0;i<NUM_FILAS_DISPLAY;i++) {
-			for(j=0;j<NUM_COLUMNAS_DISPLAY;j++) {
-				p_pantalla->matriz[i][j] = ladrillos_game_over;
-			}
-		}
-	}
-
-	return;
-}*/
 
 void ReseteaPantalla (tipo_pantalla *p_pantalla) {
 	int i=0, j=0;
@@ -202,7 +161,7 @@ void PintaPala(tipo_pala *p_pala, tipo_pantalla *p_pantalla) {
 }
 
 void PintaPelota(tipo_pelota *p_pelota, tipo_pantalla *p_pantalla) {
-	if( (p_pelota->x >= 0) && (p_pelota->x < NUM_COLUMNAS_DISPLAY) ) {
+	if( (p_pelota->x >= 0) && (p_pelota->x <= NUM_COLUMNAS_DISPLAY) ) {
 		if( (p_pelota->y >= 0) && (p_pelota->y < NUM_FILAS_DISPLAY) ) {
 			p_pantalla->matriz[p_pelota->y][p_pelota->x] = 8;
 		}
@@ -303,7 +262,7 @@ int CompruebaReboteLadrillo (tipo_arkanoPi *p_arkanoPi) {
 
 	p_posible_ladrillo_x = p_arkanoPi->pelota.x + p_arkanoPi->pelota.trayectoria.xv;
 
-	if ( ( p_posible_ladrillo_x < 0) || ( p_posible_ladrillo_x >= NUM_COLUMNAS_DISPLAY ) ) {
+	if ( ( p_posible_ladrillo_x < 0) || ( p_posible_ladrillo_x > NUM_COLUMNAS_DISPLAY ) ) {
 		printf("\n\nERROR GRAVE!!! p_posible_ladrillo_x = %d!!!\n\n", p_posible_ladrillo_x);
 		fflush(stdout);
 		exit(-1);
@@ -329,7 +288,7 @@ int CompruebaReboteLadrillo (tipo_arkanoPi *p_arkanoPi) {
 int CompruebaReboteParedesVerticales (tipo_arkanoPi arkanoPi) {
 	// Comprobamos si la nueva posicion de la pelota excede los limites de la pantalla
 	if((arkanoPi.pelota.x + arkanoPi.pelota.trayectoria.xv >= NUM_COLUMNAS_DISPLAY) ||
-		(arkanoPi.pelota.x + arkanoPi.pelota.trayectoria.xv < 0) ) {
+		(arkanoPi.pelota.x + arkanoPi.pelota.trayectoria.xv < 0)) {
 		// La pelota rebota contra la pared derecha o izquierda
 		return 1;
 	}
@@ -437,6 +396,7 @@ int CompruebaFinalJuego(fsm_t* this) {
 
 	return result;
 }
+
 
 int CompruebaPausa(fsm_t* this) {
 	int result = 0;
@@ -548,7 +508,15 @@ void ActualizarJuego (fsm_t* this) {
 	piUnlock (SYSTEM_FLAGS_KEY);
 
 	if(CompruebaReboteParedesVerticales(*p_arkanoPi)){//
-		p_arkanoPi->pelota.trayectoria.xv = -p_arkanoPi->pelota.trayectoria.xv;
+		if(nivel==3){
+			if(p_arkanoPi->pelota.x >= NUM_COLUMNAS_DISPLAY){
+				p_arkanoPi->pelota.x = 0;
+			}else if(p_arkanoPi->pelota.x <= 0){
+				p_arkanoPi->pelota.x = 7;
+			}
+		}else{
+			p_arkanoPi->pelota.trayectoria.xv = -p_arkanoPi->pelota.trayectoria.xv;
+		}
 	}
 	if(CompruebaReboteTecho(*p_arkanoPi)){//
 		p_arkanoPi->pelota.trayectoria.yv = -p_arkanoPi->pelota.trayectoria.yv;
@@ -599,13 +567,20 @@ void ActualizarJuego (fsm_t* this) {
 		p_arkanoPi->pelota.trayectoria.yv = -p_arkanoPi->pelota.trayectoria.yv;
 		printf("%c",7);
 
+		if(nivel==3){
+				if(p_arkanoPi->pelota.x >= NUM_COLUMNAS_DISPLAY){
+					p_arkanoPi->pelota.x = 0;
+				}else if(p_arkanoPi->pelota.x <= 0){
+					p_arkanoPi->pelota.x = 7;
+				}
+		}
+
 		if(CalculaLadrillosRestantes(&(p_arkanoPi->ladrillos)) <= 0){//CalculaLadrillosRestantes(&(p_arkanoPi->ladrillos)) <= 0
 			info="Has perdido         ";
 			piLock(SYSTEM_FLAGS_KEY);
 			flags |= FLAG_FIN_JUEGO;
 			piUnlock(SYSTEM_FLAGS_KEY);
 			//exit(0);
-			return;
 		}
 	}
 
@@ -648,11 +623,14 @@ void ActualizarJuego (fsm_t* this) {
 
 void FinalJuego (fsm_t* this) {
 
+	info="Juego terminado       ";
+
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_FIN_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
 
 	//pseudoWiringPiEnableDisplay(0);
+	//NO se utiliza la ultima sentencia para que se puede imprimir la informacion del juego
 }
 
 //void ReseteaJuego (void): función encargada de llevar a cabo la
