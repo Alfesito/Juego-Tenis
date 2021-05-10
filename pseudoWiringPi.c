@@ -465,11 +465,13 @@ void digitalWrite (int pin, int value)
 
 				// Actualizo pantalla
 				printf("\n[ARKANOPI]\n");
-				//printf("VIDAS: %i\n", lifes);
+				//MARCADOR DEL JUEGO
 				printf("MAX. PUNTUACIÓN:%i | VIDAS:%i | NV:%i | INFO:%s \n",bestscore,lifes,nivel,info);
 				for(i=0;i<7;i++) {
 					for(j=0;j<8;j++)
 						if(pseudoMatriz[i][j]) {
+							//Esta condición sirve para que cuando el el juego termina, se pueda actualizar la pantalla,
+							//y muestre el mensaje de "game win"
 							if(bestscore==10){
 								printf("\033[%dm", pseudoMatrizColor[i][j]);
 								printf("%d\033[0m", pseudoMatriz[i][j]);
