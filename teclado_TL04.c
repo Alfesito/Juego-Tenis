@@ -151,12 +151,14 @@ void ProcesaTeclaPulsada(fsm_t *this) {
 
 	switch (p_teclado->teclaPulsada.col) {
 	case COLUMNA_1:
+		//IZQUIERDA
 		if (p_teclado->teclaPulsada.row == FILA_2) {
 			piLock(SYSTEM_FLAGS_KEY);
 			flags |= FLAG_MOV_IZQUIERDA;
 			piUnlock(SYSTEM_FLAGS_KEY);
 			p_teclado->teclaPulsada.row = -1;
 			p_teclado->teclaPulsada.col = -1;
+		//ENCENDIO O RESETEO
 		} else if (p_teclado->teclaPulsada.row == FILA_1) {
 			piLock(SYSTEM_FLAGS_KEY);
 			flags |= FLAG_BOTON;
@@ -172,6 +174,7 @@ void ProcesaTeclaPulsada(fsm_t *this) {
 		break;
 
 	case COLUMNA_3:
+		//DERECHA
 		if (p_teclado->teclaPulsada.row == FILA_2) {
 
 			piLock(SYSTEM_FLAGS_KEY);
@@ -182,8 +185,9 @@ void ProcesaTeclaPulsada(fsm_t *this) {
 			p_teclado->teclaPulsada.col = -1;
 		}
 		break;
-
+		
 	case COLUMNA_4:
+		//FIN DE JUEGO
 		if (p_teclado->teclaPulsada.row == FILA_1) {
 			piLock (SYSTEM_FLAGS_KEY);
 			flags |=FLAG_FIN_JUEGO;
@@ -191,12 +195,18 @@ void ProcesaTeclaPulsada(fsm_t *this) {
 			p_teclado->teclaPulsada.row = -1;
 			p_teclado->teclaPulsada.col = -1;
 		}
+		//PAUSA
 		if (p_teclado->teclaPulsada.row == FILA_4) {
+			//Si el timeout no es cero, el sistema no esta en pausa,
+			//por lo tanto se puede pausar
 			if(speed!=0){
 				piLock (SYSTEM_FLAGS_KEY);
 				flags |=FLAG_PAUSA;
 				piUnlock (SYSTEM_FLAGS_KEY);
-			}else{
+			}
+			//Si el timeout del sistema está en cero, es que está pausado,
+			//por lo que se pondrá a jugar de nuevo
+			if(speed==0){
 				piLock (SYSTEM_FLAGS_KEY);
 				flags |=FLAG_FINAL_PAUSA;
 				piUnlock (SYSTEM_FLAGS_KEY);
