@@ -506,9 +506,13 @@ void ActualizarJuego (fsm_t* this) {
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_TIMER_JUEGO;
 	piUnlock (SYSTEM_FLAGS_KEY);
-
-	if(CompruebaReboteParedesVerticales(*p_arkanoPi)){//
+	
+	
+	if(CompruebaReboteParedesVerticales(*p_arkanoPi)){
+		//PAREDES SIN REBOTE VERTICAL EN EL NIVEL 3
 		if(nivel==3){
+			//Si la pelota se encuentra en los limites verticales de la matriz
+			//Las coordenadas de la pelota cambian, y se actualizan al lado contrario
 			if(p_arkanoPi->pelota.x >= NUM_COLUMNAS_DISPLAY){
 				p_arkanoPi->pelota.x = 0;
 			}else if(p_arkanoPi->pelota.x <= 0){
@@ -521,12 +525,13 @@ void ActualizarJuego (fsm_t* this) {
 	if(CompruebaReboteTecho(*p_arkanoPi)){//
 		p_arkanoPi->pelota.trayectoria.yv = -p_arkanoPi->pelota.trayectoria.yv;
 	}
-
+	
+	//Si la pelota no choca con la pala, se produce un fallo y se resta 1 a las vidas
 	if(CompruebaFallo(*p_arkanoPi)) {
-
 		lifes--;
+		//Mientra la variable vidas sea mayor que cero, el juego seguira ejecutandose
+		//Cada vez que se pierde una vida, se empieza desde 0
 		if(lifes>=0){
-
 			p_arkanoPi->score=0;
 
 			InicializaPelota(&(p_arkanoPi->pelota));
@@ -542,12 +547,9 @@ void ActualizarJuego (fsm_t* this) {
 			piUnlock(SYSTEM_FLAGS_KEY);
 			//exit(0);
 		}
-
-		/*piLock(STD_IO_BUFFER_KEY);
-		printf("GAME OVER\n");
-		piUnlock(STD_IO_BUFFER_KEY);*/
 		return;
 	}else if(CompruebaRebotePala(*p_arkanoPi)){
+		//Cuando al pelota choca con la pala, se produce un sonido de choque
 		printf("%c",7);
 		switch(p_arkanoPi->pelota.x + p_arkanoPi->pelota.trayectoria.xv - p_arkanoPi->pala.x){
 			case 0:
@@ -561,12 +563,15 @@ void ActualizarJuego (fsm_t* this) {
 				break;
 		}
 	}
-
-	if(CompruebaReboteLadrillo(p_arkanoPi)){//
+	
+	//Si la pelota destruye un ladrillo, se suma 1 a la variable scores
+	if(CompruebaReboteLadrillo(p_arkanoPi)){
 		p_arkanoPi->score++;
 		p_arkanoPi->pelota.trayectoria.yv = -p_arkanoPi->pelota.trayectoria.yv;
+		//Cuando al pelota choca con la pala, se produce un sonido de choque
 		printf("%c",7);
-
+		//Cuando el nivel del juego es 3, puede producirse errores si la pelota está en la coordenada y=1 y x=0 o x=7,
+		//por ello con esta condición nos aseguramos que no se produzca ningún error mientras jugamos.
 		if(nivel==3){
 				if(p_arkanoPi->pelota.x >= NUM_COLUMNAS_DISPLAY){
 					p_arkanoPi->pelota.x = 0;
@@ -575,7 +580,7 @@ void ActualizarJuego (fsm_t* this) {
 				}
 		}
 
-		if(CalculaLadrillosRestantes(&(p_arkanoPi->ladrillos)) <= 0){//CalculaLadrillosRestantes(&(p_arkanoPi->ladrillos)) <= 0
+		if(CalculaLadrillosRestantes(&(p_arkanoPi->ladrillos)) <= 0){
 			info="Has perdido         ";
 			piLock(SYSTEM_FLAGS_KEY);
 			flags |= FLAG_FIN_JUEGO;
@@ -585,18 +590,18 @@ void ActualizarJuego (fsm_t* this) {
 	}
 
 	ActualizaPosicionPelota(&(p_arkanoPi->pelota));
-
-	if(p_arkanoPi->score < 3){//scores < 3
+	//Sistema de niveles por puntos
+	if(p_arkanoPi->score < 3){/
 		nivel=1;
 		speed = TIMEOUT_ACTUALIZA_JUEGO;
-	}else if(p_arkanoPi->score < 5){//scores < 5
+	}else if(p_arkanoPi->score < 5){
 		nivel=2;
 		speed=1300;
-	}else if(p_arkanoPi->score < 10){//scores < 10
+	}else if(p_arkanoPi->score < 10){
 		nivel=3;
 		speed=1000;
 
-	}else if(p_arkanoPi->score >= 10){//scores >= 10
+	}else if(p_arkanoPi->score >= 10){
 		info="Has ganado!!        ";
 
 		piLock(SYSTEM_FLAGS_KEY);
@@ -606,7 +611,9 @@ void ActualizarJuego (fsm_t* this) {
 	}else{
 		speed = TIMEOUT_ACTUALIZA_JUEGO;
 	}
-
+	
+	//Se guarda en la variable bestscore la mejor marca de todos los intentos,
+	//luego se muestra por pantalla en el marcador
 	if(p_arkanoPi->score>bestscore){
 		bestscore=p_arkanoPi->score;
 	}
@@ -653,6 +660,8 @@ void ReseteaJuego (fsm_t* this) {
 
 }
 
+//void PausaJuego (void): función encargada de llevar a cabo la
+// pausa de la partida.
 void PausaJuego(fsm_t* this){
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
@@ -668,11 +677,13 @@ void PausaJuego(fsm_t* this){
 	piLock(MATRIX_KEY);
 	ActualizaPantalla(p_arkanoPi,0);
 	piUnlock(MATRIX_KEY);
-
+	//El timeout del timer es cero para que el juego se quede congelado
 	speed=0;
 	tmr_startms((tmr_t*)(p_arkanoPi->tmr_actualizacion_juego), speed);
 }
 
+//void PausaJuego (void): función encargada de llevar a cabo el
+// fin de pausa de la partida
 void FinalPausaJuego(fsm_t* this){
 	tipo_arkanoPi* p_arkanoPi;
 	p_arkanoPi = (tipo_arkanoPi*)(this->user_data);
@@ -680,7 +691,7 @@ void FinalPausaJuego(fsm_t* this){
 	piLock (SYSTEM_FLAGS_KEY);
 	flags &= ~FLAG_FINAL_PAUSA;
 	piUnlock(SYSTEM_FLAGS_KEY);
-
+	//Determina el valor del timeout después de la pausa, segun el número de scores
 	if(p_arkanoPi->score < 5){
 		speed=1300;
 	}else if(p_arkanoPi->score < 10){
