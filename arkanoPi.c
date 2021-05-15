@@ -212,8 +212,8 @@ int main() {
 
 	// Configuracion e incializacion del sistema
 	ConfiguraInicializaSistema(&sistema);
-	// ..
-
+	
+	//Iniciación de las máquinas de estados
 	fsm_t *arkanoPi_fsm = fsm_new(WAIT_START, arkanoPi, &sistema.arkanoPi);
 
 	fsm_t *teclado_fsm = fsm_new(TECLADO_ESPERA_COLUMNA,
