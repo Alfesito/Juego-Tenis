@@ -234,12 +234,6 @@ int main() {
 		delay_until(next);
 	}
 	tmr_destroy((tmr_t*) (sistema.arkanoPi.tmr_actualizacion_juego));
-	//fsm_destroy(arkanoPi_fsm);
-	//fsm_destroy(teclado_fsm);
-	//fsm_destroy(tecla_fsm);
-	//fsm_destroy((tmr_t*) led_display.tmr_refresco_display);
-	//fsm_destroy((tmr_t*) teclado.tmr_duracion_columna);
-	//fsm_destroy(display_fsm);
 
 	return 0;
 }
