@@ -1,37 +1,66 @@
-FUNCIONALIDAD SCORES:
-EL objetivo es que cuando la pelota rompa un ladrillo, el jugador gane un punto en el acto, pudiendo asi, al llegar a una serie de puntos aumentar
-la dificultad del juego con niveles.
-· Código:
-  - Definimos en sistemLib.h una variable externa global llamada scores, donde se puedan almacenar la puntuación del usuario.
-  - Cada vez que la pelota rompa un ladrillo se sumara un punto, esto se hace en la función CompruebaReboteLadrillo de arkanoPiLib.c
-  - Cada vez que se inicie el juego o se resetee, la variable scores valdrá 0.
-  - Para que el usuario pueda ver su puntuación, se añade a la pantalla una linea llamada SCORES, donde la puntuación se va actualizando conforme
-  a la actuación del usuario.
-  
-INCREMENTO DE LA VELOCIDAD DE LA PELOTA:
-Para conseguir aumentar la velocidad de la pelota, usamos el time_out del timer tmr_actualizacion_juego, con lo que conseguimos un incremento de la
-velocidad de actualización de la pelota.
-· Código: 
-  - Dentro de la función ActualizarJuego ponemos una serie de condiciones que cuando se cumplan, hacen que aumente la velocidad de la pelota.
-  - Cuando se han roto 3 ladrillos la actualización del timeout desciende a 1500 y cuando se han roto 5 ladrillos disminuye a 1200 ladrillos.
-    Fimalmente, cuando se llega a 10 ladrillos rotos el juego se termina.
-   
-CAMBIAR EL COLOR DE LA PELOTA: 
-El objetivo de esta mejora es cambiar el color de la pelota para poder distinguir su trayectoria de una mejor forma. 
-Para ello hemos cambiado el color de la pelota a verde en lugar del color blanco que tenia antes. 
-Código:
-  - En pseudowaringPi en el apartado de static int pseudoMatrizColor, tenemos definido de antemano que las dos primeras columnas desde la zona 
-  superior sean de color rojo (31), y la última fila de color azul(34).
-  - Las filas intermedias tenian asignado en primer lugar 0, por tanto, salía de color blanco, y nosotros hemos cambiado 
-    ese valor por el número 32 que representa el color verde, de esta forma mientas la pelota se encuentre en esa posición tomará el color verde.
-
-FUNCIONALIDAD VIDAS:
-Esta funcionalidad está relacionada con la funcionalidad scores, ya que el usuario tiene tres oportunidades(vidas) para sacar la mejor puntación posible.
-
-FUNCIONALIDAD PAUSA:
-El objetivo de esta funcionalidad es que el usuario pueda parar el juego y luego puder empezar a jugar donde lo dejo al pulsar el boton de pausa. Esto se
-realiza gracias a la maquina de estados de y los flags de pausa.
-
-MEJORA DE LA INTERFAZ:
-Para una mejor experiencia del usuario, hemos decicido escribir por pantalla la puntuación maxima, las vidas, el nivel del juego y la información sobre la partida.
-Todo ello para que el usuario sepa en todo momento cual es su situación en el juego.
+4 Mejora Mejora 3: 3: FUNCIONALIDAD DE VIDAS FUNCIONALIDAD DE VIDAS
+4.1 Objetivos de la mejoraObjetivos de la mejora El objetivo de esta mejora es darle al jugador 3 vidas para poder ganar en el juego a pesar de perder cuando la pelota no rebota en la pala. Y en el caso que el número de vidas sea menor que cero, el jugador perderá la partida.
+4.2 Descripción del subsistema SoftwareDescripción del subsistema Software Para la implementación de esta funcionalidad se ha declarado una variable externa llamada lifes en systemLib.h que está iniciada a tres. A su vez tenemos un contador en la función ActualizaJuego de arkanoPiLib.c, de esta forma, cuando la función CompruebaFallo devuelve uno, se decrementará uno la variable lifes. Además, en esta función también está implementada la condición de que si el contador es menor que cero el juego termina. En el siguiente enlace disponemos de un video donde se muestra la funcionalidad comentada:
+https://youtu.be/mQEpm39EvZE
+4.2.1 Flujo de ejecución del programa principal
+4.2.2 Procesos de las interrupciones Cuando la variable vidas es menor que 0, se interrumpe el timer que inicializa el juego, y se realiza la llamada al flag de fin de juego.
+Memoria de las mejoras realizadas sobre el proyecto estándar de Sistemas Digitales II (SDII) curso 2020/2021
+8
+5 Mejora Mejora 4: FUNCIONALIDAD DE PAUSA4: FUNCIONALIDAD DE PAUSA
+5.1 Objetivos de la mejoraObjetivos de la mejora El objetivo de esta mejora es establecer un botón con el cual podamos pausar el juego y a su vez, si lo volvemos a pulsar, volver a iniciar el juego.
+5.2 Descripción del subsisteDescripción del subsistema Softwarema Software Para el desarrollo de esta funcionalidad, se han añadido dos flags(FLAG_PAUSA y FLAG_FIN_PAUSA), además, se ha actualizado la máquina de estados de arkanoPi.c dentro de la función main, para su correcto funcionamiento, por otro lado se han implementado las funciones que llama dicha maquina cuando se pulsa el botón de pausa (al cual se le ha asignado el botón ‘F’ en teclado_TL04.c), ya sea para pausar o para continuar con el juego.
+En el siguiente enlace, tenemos un video de la funcionalidad comentada:
+https://youtu.be/JKPmNZDU0d4
+5.2.1 Flujo de ejecución del programa principal
+5.2.2 Procesos de las interrupciones
+Cuando se pulsa la tecla F se interrumpe el timeout y se le cambia el valor a cero, para pausar el movimiento de la pelota. Cuando se vuelve a pulsar la tecla, se interrumpe el timeout y se cambia a su valor antes de ser pulsada la tecla F.
+Memoria de las mejoras realizadas sobre el proyecto estándar de Sistemas Digitales II (SDII) curso 2020/2021
+9
+6 Mejora 5: MEJORA DE LA INTERFAZ DEL JUEGOMejora 5: MEJORA DE LA INTERFAZ DEL JUEGO
+6.1 Objetivos de la mejoraObjetivos de la mejora
+El objetivo de esta mejora es implementar todos los marcadores anteriormente descritos, además de realizar sutiles cambios en la disposición del juego, para darle más dinamismo.
+6.2 Descripción del subsistema SoftwareDescripción del subsistema Software
+En primer lugar, se han añadido tanto el marcador como el contador de vidas del jugador en la parte superior de la pantalla. Por otro lado, se ha cambiado el color de la pelota para poder distinguirla de mejor manera frente al resto de elementos del juego. Por último, hemos añadido la información de la partida por pantalla, es decir, avisos de lo que está sucediendo en el juego en ese momento.
+Además, hemos cambiado el color de la pelota, en el archivo pseudowaringPi en la función pseudoMatrizColor, cambiando las filas intermedias que tenían el número 0 (asignación de color blanco) por el número 32 que representa el color verde, de esta forma cada vez que la pelota pase por una de esas filas su color cambiará a verde.
+Cada uno de los parámetros que se va a mostrar por la pantalla se realiza declarando una variable externa que permita en todo momento la actualización de dichos valores.
+En la siguiente imagen podemos observar todos los elementos anteriormente comentados:
+Memoria de las mejoras realizadas sobre el proyecto estándar de Sistemas Digitales II (SDII) curso 2020/2021
+10
+7 Mejora 6: AUSENCIA DE REBOTRES VERTICALESMejora 6: AUSENCIA DE REBOTRES VERTICALES
+7.1 Objetivos de la mejoraObjetivos de la mejora El objetivo de esta mejora es aumentar la dificultad en el nivel 3 de nuestro juego, haciendo que la pelota vaya de la pared derecha a la izquierda o viceversa, todo esto sin que la pelota cambie su trayectoria.
+7.2 DDescripción del subsistema Softwareescripción del subsistema Software Para la realización de esta mejora hemos modificado el archivo arkanoPiLib.c, cambiando algunas condiciones de las funciones predefinidas CompruebaLadrillo y PintaPelota, ya que en algunas situaciones daban un “error grabe”. Después hemos modificado la función ActualizarJuego, para que cuando la función CompruebaReboteVerticales devuelva uno si la pelota está en la columna 7, al actualizar la pantalla, en el siguiente frame, la pelota aparecerá en la columna 0 o viceversa.
+7.2.1 Flujo de ejecución del programa principal
+7.2.2 Procesos de las interrupciones
+Cuando se pulsa la tecla F se activa el FLAG_PAUSA. Al comprobar la activación de FLAG_PAUSA, y si esta devuelve 1, la función de salida pondrá el timeout del timer ActualizarJuego a cero para que el juego se quede congelado. Cuando se vuelve a pulsar la tecla, se interrumpe el timeout y se le cambia a su valor antes de ser pulsada la tecla F.
+Memoria de las mejoras realizadas sobre el proyecto estándar de Sistemas Digitales II (SDII) curso 2020/2021
+11
+8 Principales problemasPrincipales problemas encontradosencontrados
+Respecto a los principales problemas encontrados, no hemos tenido muchos problemas en las mejoras, pero los más complicados de resolver han sido estos:
+• Al modificar la pseudoWiringPi.c para la mejora de la interfaz, hemos necesitado muchos ensayos y errores, ya que al colocar printf para imprimir el marcador, la matriz del juego no salía como debía, pero aun así conseguimos entender su funcionalidad y pudimos poner el marcador.
+• Con el botón de pausa también tuvimos algunos problemas, ya que al entrar el juego en pausa no sabíamos bien como salir de la pausa, porque no se activaba el flag de fin de pausa. Inicialmente se nos ocurrió declarar una variable externa llamada pausa para que se activase a uno cuando el sistema estaba en pausa y se pusiera a cero cuando se estaba jugando. Finalmente, no utilizamos dicha variable, debido a que nos dimos cuenta que si el timeout del timer actualiza juego estaba a cero, esto significaba que el sistema estaría en pausa. Por ello utilizamos esta condición para que al pulsar la tecla F (botón de pausa) el sistema sepa que flag activar en todo momento.
+• Por último, al quitar los rebotes verticales cuando llegaba la pelota a rebotar con la pared de la derecha, el juego imprimía un mensaje de “error grave”, puesto que según su programación la pelota estaba fuera de la matriz. Esto se solucionó gracias a cambiar las condiciones donde las funciones CompruebaLadrillo y PintaPelota cuando imprimian el error.
+El resto de problemas que hemos ido obteniendo, los hemos solventado de forma rápida.
+Memoria de las mejoras realizadas sobre el proyecto estándar de Sistemas Digitales II (SDII) curso 2020/2021
+12
+9 Manual de usuarioManual de usuario
+Para poder jugar al juego en primer lugar necesitamos describir la función de nuestras teclas asignadas.
+Teclas asignadas:
+• La tecla 1, se encarga de iniciar el juego
+• La tecla F tiene la función de pausar, y reanudar el juego
+• La tecla C se encarga de terminar el juego
+• La tecla 4 realiza el movimiento hacia la izquierda de la barra
+• La tecla 6 realiza el movimiento hacia la derecha de la barra
+El jugador dispone de un marcador con el cual, a medida que vaya consiguiendo puntos se incrementará la dificultad del juego, hasta alcanzar los 10 puntos que sería cuando finaliza el juego.
+Se implementa un sistema de vidas, por lo tanto, el jugador dispone de 3 oportunidades para acabar la partida, una vez gastadas estas 3 oportunidades, el juego finalizará.
+A continuación, podemos observar una captura de los controles descritos en el propio juego:
+Memoria de las mejoras realizadas sobre el proyecto estándar de Sistemas Digitales II (SDII) curso 2020/2021
+13
+10 BibliografíaBibliografía
+En referencia a la bibliografía utilizada para el desarrollo de la práctica, hemos utilizado los documentos adjuntos de Moodle de la asignatura de SDG2:
+1. Tutorial1: Introducción al entorno de desarrollo en C para Raspberry Pi
+2. Tutorial2: Introducción a las máquinas de estados en C para Raspberry Pi
+3. Tutorial3: Iniciación al manejo de las Entradas/Salidas del BCM 2835
+4. Tutorial4: Manejo de temporizadores, interrupciones y procesos con la Raspberry Pi
+5. Tutorial5: Manejo de periféricos mediante SPI con la Raspberry Pi
+6. Display LCD
+7. Los diversos videotutoriales sobre programación en C
