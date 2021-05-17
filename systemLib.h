@@ -17,7 +17,7 @@
 #include "fsm.h"
 #include "tmr.h"
 
-#define CLK_MS 1 //periodo de actualizacion de la maquina de estados
+#define CLK_MS 10 //periodo de actualizacion de la maquina de estados
 
 // ATENCION: Valores a modificar por el alumno
 // INTERVALO DE GUARDA ANTI-REBOTES

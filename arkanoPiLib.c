@@ -591,7 +591,7 @@ void ActualizarJuego (fsm_t* this) {
 
 	ActualizaPosicionPelota(&(p_arkanoPi->pelota));
 	//Sistema de niveles por puntos
-	if(p_arkanoPi->score < 3){/
+	if(p_arkanoPi->score < 3){
 		nivel=1;
 		speed = TIMEOUT_ACTUALIZA_JUEGO;
 	}else if(p_arkanoPi->score < 5){
